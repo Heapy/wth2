@@ -35,47 +35,53 @@ public class User extends AbstractEntity {
         return displayName;
     }
 
-    public void setDisplayName(String displayName) {
+    public User setDisplayName(String displayName) {
         this.displayName = displayName;
+        return this;
     }
 
     public String getUsername() {
         return username;
     }
 
-    public void setUsername(String username) {
+    public User setUsername(String username) {
         this.username = username;
+        return this;
     }
 
     public String getPassword() {
         return password;
     }
 
-    public void setPassword(String password) {
+    public User setPassword(String password) {
         this.password = password;
+        return this;
     }
 
     public List<Interest> getInterests() {
         return interests;
     }
 
-    public void setInterests(List<Interest> interests) {
+    public User setInterests(List<Interest> interests) {
         this.interests = interests;
+        return this;
     }
 
     public Long getLongitude() {
         return longitude;
     }
 
-    public void setLongitude(Long longitude) {
+    public User setLongitude(Long longitude) {
         this.longitude = longitude;
+        return this;
     }
 
     public Long getLatitude() {
         return latitude;
     }
 
-    public void setLatitude(Long latitude) {
+    public User setLatitude(Long latitude) {
         this.latitude = latitude;
+        return this;
     }
 }
