@@ -11,7 +11,6 @@ import org.springframework.context.annotation.ComponentScan;
 import java.util.Arrays;
 
 @SpringBootApplication
-@ComponentScan("lab")
 public class Application {
 
     public static void main(String[] args) {
