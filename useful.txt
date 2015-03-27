@@ -1,0 +1,1 @@
+./gradlew build && java -jar server/build/libs/heap-server-0.0.1.jar
