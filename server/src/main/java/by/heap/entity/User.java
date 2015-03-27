@@ -21,6 +21,12 @@ public class User extends AbstractEntity {
     @OneToMany
     private List<Interest> interests;
 
+    @Column
+    private Long longitude;
+
+    @Column
+    private Long latitude;
+
 
     public String getDisplayName() {
         return displayName;
@@ -52,5 +58,21 @@ public class User extends AbstractEntity {
 
     public void setInterests(List<Interest> interests) {
         this.interests = interests;
+    }
+
+    public Long getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(Long longitude) {
+        this.longitude = longitude;
+    }
+
+    public Long getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(Long latitude) {
+        this.latitude = latitude;
     }
 }
