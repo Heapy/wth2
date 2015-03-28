@@ -5,7 +5,9 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 
 @Entity
@@ -21,14 +23,20 @@ public class User extends AbstractEntity {
     @Column(nullable = false)
     private String password;
 
+    @Column(nullable = false)
+    private String secret = UUID.randomUUID().toString();
+
     @OneToMany
-    private List<Interest> interests;
+    private List<Interest> interests = new ArrayList<>();
 
     @Column
-    private Long longitude;
+    private Long karma = 0L;
 
     @Column
-    private Long latitude;
+    private String longitude;
+
+    @Column
+    private String latitude;
 
 
     public String getDisplayName() {
@@ -58,6 +66,15 @@ public class User extends AbstractEntity {
         return this;
     }
 
+    public String getSecret() {
+        return secret;
+    }
+
+    public User setSecret(String secret) {
+        this.secret = secret;
+        return this;
+    }
+
     public List<Interest> getInterests() {
         return interests;
     }
@@ -67,20 +84,29 @@ public class User extends AbstractEntity {
         return this;
     }
 
-    public Long getLongitude() {
+    public Long getKarma() {
+        return karma;
+    }
+
+    public User setKarma(Long karma) {
+        this.karma = karma;
+        return this;
+    }
+
+    public String getLongitude() {
         return longitude;
     }
 
-    public User setLongitude(Long longitude) {
+    public User setLongitude(String longitude) {
         this.longitude = longitude;
         return this;
     }
 
-    public Long getLatitude() {
+    public String getLatitude() {
         return latitude;
     }
 
-    public User setLatitude(Long latitude) {
+    public User setLatitude(String latitude) {
         this.latitude = latitude;
         return this;
     }

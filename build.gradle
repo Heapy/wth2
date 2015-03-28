@@ -45,6 +45,10 @@ dependencies {
     compile 'org.springframework.data:spring-data-rest-webmvc:2.3.0.RELEASE'
     compile 'com.google.guava:guava:18.0'
 
+    compile("org.springframework.security:spring-security-jwt:1.0.3.RELEASE")
+    compile("org.springframework.security:spring-security-config:4.0.0.RELEASE")
+    compile("org.springframework.security:spring-security-web:4.0.0.RELEASE")
+
 }
 
 task wrapper(type: Wrapper) {
