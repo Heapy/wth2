@@ -202,7 +202,7 @@ Minimun 10 interests!
 ### Create new request for adventure [POST]
 
 * id - Id of created adventure that will be used for heartbeat requests.
-* status - is game started
+* status - SEARCHING, PLAYING
 
 + Request (application/json)
 
@@ -215,7 +215,7 @@ Minimun 10 interests!
 
         {   
             "id": 15,
-            "status":true
+            "status": "SEARCHING"
         }
         
 ## Adventure Heartbeat [/adventure/{id}/heartbeat]
@@ -223,6 +223,7 @@ Minimun 10 interests!
 ### Do heartbeat [PUT]
     
 * id - id of adventure
+* status - SEARCHING, PLAYING, AFTER_GAME, ERROR
 
 Token will be returned in case if status true.
 If lat and long provided in request, that means that game started and lat and long of other user expected in responce.
@@ -237,7 +238,7 @@ If lat and long provided in request, that means that game started and lat and lo
 + Response 200
 
         {   
-            "status": true,
+            "status": "PLAYING",
             "token": "894478"
         }
 
