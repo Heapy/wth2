@@ -1,5 +1,10 @@
 package by.heap.entity;
 
+import org.springframework.beans.factory.annotation.Autowired;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.ManyToOne;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
@@ -7,14 +12,19 @@ import java.util.concurrent.atomic.AtomicBoolean;
  *
  * @author Ibragimov Ruslan
  */
-public class Adventure {
+@Entity
+public class Adventure extends AbstractEntity {
 
+    @ManyToOne
     private User firstUser;
 
+    @ManyToOne
     private User secondUser;
 
+    @Column
     private String token;
 
+    @Column
     private AtomicBoolean status;
 
     public User getFirstUser() {
