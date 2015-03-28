@@ -9,4 +9,9 @@ public class LoginRequestDto {
 
     @JsonProperty
     public String password;
+
+    public LoginRequestDto(String username, String password) {
+        this.username = username;
+        this.password = password;
+    }
 }

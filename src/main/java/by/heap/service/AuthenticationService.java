@@ -82,18 +82,18 @@ public class AuthenticationService {
 
     @RequestMapping(value = "/register", method = RequestMethod.POST)
     @ResponseStatus(value = HttpStatus.OK)
-    public LoginResponceDto register(@RequestBody final User newUser) {
+    public LoginResponceDto register(@RequestBody final User user) {
         try {
-            newUser.setPassword(passwordEncoder.encode(newUser.getPassword()));
-            userRepository.save(newUser);
+            user.setPassword(passwordEncoder.encode(user.getPassword()));
+            userRepository.save(user);
+            return login(new LoginRequestDto(user.getUsername(), user.getPassword()));
         } catch (Exception e) {
-            Optional.ofNullable(newUser.getUsername()).ifPresent(username -> {
+            Optional.ofNullable(user.getUsername()).ifPresent(username -> {
                 LOGGER.warn("Unsuccessful authentication attempt with username '{}'.", username);
             });
             // TODO: Hackaton style
             throw new RuntimeException("An exception during authentication.", e);
         }
-        return null;
     }
 
 
