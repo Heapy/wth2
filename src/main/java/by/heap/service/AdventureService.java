@@ -64,7 +64,7 @@ public class AdventureService {
                     foundAdventure = userHolder.getAdventure();
                     foundAdventure.setSecondUser(currentUser);
                     USER_HOLDERS.remove(userHolder);
-                    //TODO в список играющих
+                    //TODO РІ СЃРїРёСЃРѕРє РёРіСЂР°СЋС‰РёС…
                     break;
                 }
             }
