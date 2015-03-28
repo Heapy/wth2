@@ -7,6 +7,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
  *
  * @author Ibragimov Ruslan
  */
+@Deprecated
 public class Adventure {
 
     private User firstUser;
