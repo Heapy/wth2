@@ -20,7 +20,12 @@ public class UsersService {
     private UserRepository userRepository;
 
     @RequestMapping(value = "top", method = RequestMethod.GET)
-    public List<User> top() {
+    public List<User> topUsers() {
         return userRepository.findTopByKarma(Pageable.SEVEN);
+    }
+
+    @RequestMapping(value = "location", method = RequestMethod.GET)
+    public List<User> usersLocation() {
+        return userRepository.findAll();
     }
 }
