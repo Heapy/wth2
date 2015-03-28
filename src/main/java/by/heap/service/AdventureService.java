@@ -1,6 +1,5 @@
 package by.heap.service;
 
-import org.eclipse.jetty.util.ConcurrentHashSet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
@@ -9,6 +8,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.time.Instant;
+import java.util.Collections;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 @RestController
 @RequestMapping(value = "/adventure", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -16,7 +18,7 @@ public class AdventureService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AdventureService.class);
 
-    private static final ConcurrentHashSet<UserHolder> USER_HOLDERS = new ConcurrentHashSet<>();
+    private static final Set<UserHolder> USER_HOLDERS = Collections.newSetFromMap(new ConcurrentHashMap<>());
 
     @Scheduled(fixedRate = 5000)
     public void doSomething() {
