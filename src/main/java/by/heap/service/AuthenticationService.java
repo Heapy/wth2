@@ -5,7 +5,7 @@ import by.heap.repository.user.UserRepository;
 import by.heap.security.AuthenticationHelper;
 import by.heap.security.HeapUserDetails;
 import by.heap.service.dto.LoginRequestDto;
-import by.heap.service.dto.LoginResponceDto;
+import by.heap.service.dto.LoginResponseDto;
 import com.google.common.base.Preconditions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,7 +43,7 @@ public class AuthenticationService {
 
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     @ResponseStatus(value = HttpStatus.OK)
-    public LoginResponceDto login(@RequestBody final LoginRequestDto request) {
+    public LoginResponseDto login(@RequestBody final LoginRequestDto request) {
         try {
             LOGGER.debug("Login request recieved.");
 
@@ -66,7 +66,7 @@ public class AuthenticationService {
                 HeapUserDetails userDetails = (HeapUserDetails) authResult.getPrincipal();
                 String token = this.authenticationHelper.generateToken(userDetails);
                 userDetails.eraseCredentials();
-                return new LoginResponceDto(token);
+                return new LoginResponseDto(token);
             } else {
                 throw new InternalAuthenticationServiceException("Some problem occurred during authentication.");
             }
@@ -83,7 +83,7 @@ public class AuthenticationService {
 
     @RequestMapping(value = "/register", method = RequestMethod.POST)
     @ResponseStatus(value = HttpStatus.OK)
-    public LoginResponceDto register(@RequestBody final User user) {
+    public LoginResponseDto register(@RequestBody final User user) {
         try {
             Preconditions.checkArgument(user.getInterests().size() > 10, "Not enough interests");
             user.setPassword(passwordEncoder.encode(user.getPassword()));
