@@ -1,4 +1,6 @@
-# heap
+# Heap
+
+[![Build Status](https://travis-ci.org/ITXby/heap.svg)](https://travis-ci.org/ITXby/heap)
 
 [![Join the chat at https://gitter.im/hlebA/heap](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/hlebA/heap)
 
