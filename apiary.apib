@@ -1,0 +1,237 @@
+FORMAT: 1A
+HOST: http://heap.by/
+
+# HEAP
+
+# Group Users
+
+## Top Users [/users/top]
+
+### View top users [GET]
+
++ Response 200 (application/json)
+
+        {
+            "users": [
+                {
+                    "id": 1,
+                    "name": "Ibragimov Ruslan",
+                    "karma": 100500,
+                    "avatar": "http://www.gravatar.com/avatar/97dfebf4098c0f5c16bca61e2b76c373.jpg?d=identicon"
+                },
+                {
+                    "id": 2,
+                    "name": "Hleb Albau",
+                    "karma": 11,
+                    "avatar": "http://www.gravatar.com/avatar/051a95429c75c9e8ff459a9b8ac9a0da.jpg?d=identicon"
+                }
+            ]
+        }
+   
+## Users Locations [/users/location]
+
+### View users locations [GET]
+
++ Response 200 (application/json)
+
+        {
+            "users": [
+                {
+                    "id": 1,
+                    "latitude": 15.18,
+                    "longitude": 53.13,
+                    "avatar": "http://www.gravatar.com/avatar/97dfebf4098c0f5c16bca61e2b76c373.jpg?d=identicon"
+                },
+                {
+                    "id": 2,
+                    "latitude": 15.18,
+                    "longitude": 53.13,
+                    "avatar": "http://www.gravatar.com/avatar/051a95429c75c9e8ff459a9b8ac9a0da.jpg?d=identicon"
+                }
+            ]
+        }
+
+## Login [/auth/login]
+
+### Attempt login [POST]
+
++ Request (application/json)
+
+        {
+            "username": "nanana@email.com",
+            "password": "123456"
+        }
+
++ Response 200
+
+        {
+            "token": "dsdfsdvdsvdfsdfsdljfnldsfkmsdb"
+        }
+        
+## Logout [/auth/logout]
+
+### Attempt logout [POST]
+
++ Request (application/json)
+
++ Response 200
+
+## Register [/auth/register]
+
+### Register [POST]
+
+Minimun 10 interests!
+
++ Request (application/json)
+
+        {
+            "displayName": "Ruslan Ibragimov",
+            "username": "nanana@email.com",
+            "password": "123456",
+            "interests: ["Java", "Git", "Cycling", "Trololo", "Boobs"]
+        }
+
++ Response 201
+
+        {
+            "token": "dsdfsdvdsvdfsdfsdljfnldsfkmsdb"
+        }
+
+
+## Current User [/user]
+
+### Get current user [GET]
+
++ Response 200
+
+        {   
+            "id": 1,
+            "displayName": "Ruslan Ibragimov",
+            "username": "test@email.com",
+            "avatar": "http://heap.by/img.jpg",
+            "karma": 15
+        }
+        
+### Update current user [PUT]
+
++ Request (application/json)
+
+        {   
+            "karma": 16
+        }
+        
++ Response 200
+
+        {   
+            "id": 1,
+            "displayName": "Ruslan Ibragimov",
+            "username": "test@email.com",
+            "avatar": "http://heap.by/img.jpg",
+            "karma": 15
+        }
+        
+## User [/user/{id}]
+
+### Get user [GET]
+
++ Response 200
+
+        {   
+            "id": 1,
+            "displayName": "Ruslan Ibragimov",
+            "username": "test@email.com",
+            "avatar": "http://heap.by/img.jpg",
+            "karma": 15
+        }
+        
+### Update user [PUT]
+
++ Request (application/json)
+
+        {   
+            "karma": 16
+        }
+        
++ Response 200
+
+        {   
+            "id": 1,
+            "displayName": "Ruslan Ibragimov",
+            "username": "test@email.com",
+            "avatar": "http://heap.by/img.jpg",
+            "karma": 15
+        }
+
+# Group Adventure
+
+## Create adventure [/adventure]
+
+### Create new request for adventure [POST]
+
+* id - Id of created adventure that will be used for heartbeat requests.
+* status - is game started
+
++ Request (application/json)
+
+        {   
+            "latitude": 15.18,
+            "longitude": 53.13
+        }
+
++ Response 200
+
+        {   
+            "id": 15,
+            "status":true
+        }
+        
+## Adventure Heartbeat [/adventure/{id}/heartbeat]
+
+### Do heartbeat [PUT]
+    
+* id - id of adventure
+
+Token will be returned in case if status true.
+If lat and long provided in request, that means that game started and lat and long of other user expected in responce.
+
++ Request (application/json)
+
+        {   
+            "latitude": 15.18,
+            "longitude": 53.13
+        }
+
++ Response 200
+
+        {   
+            "status": true,
+            "token": "894478"
+        }
+
+## Post token [/adventure/{id}/token]
+
+### Post token when users meets [POST]
+
+* id - Id of created adventure that will be used for heartbeat requests.
+
++ Request (application/json)
+
+        {   
+            "token": "894478"
+        }
+
++ Response 200
+
+## Post interest [/adventure/{id}/interest]
+
+### Post interest when users meets [POST]
+
+* id - Id of created adventure that will be used for heartbeat requests.
+
++ Request (application/json)
+
+        {   
+            "interest": "Java"
+        }
+
++ Response 200
