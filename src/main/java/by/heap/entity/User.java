@@ -8,6 +8,7 @@ import javax.persistence.OneToMany;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 
@@ -28,7 +29,7 @@ public class User extends AbstractEntity {
     private String secret = UUID.randomUUID().toString();
 
     @OneToMany
-    private List<String> interests = new ArrayList<>();
+    private Set<Interest> interests;
 
     @Column
     private Long karma = 0L;
@@ -79,11 +80,11 @@ public class User extends AbstractEntity {
         return this;
     }
 
-    public List<String> getInterests() {
+    public Set<Interest> getInterests() {
         return interests;
     }
 
-    public User setInterests(List<String> interests) {
+    public User setInterests(Set<Interest> interests) {
         this.interests = interests;
         return this;
     }
