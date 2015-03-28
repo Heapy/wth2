@@ -58,7 +58,7 @@ public class AdventureService {
         for (Adventure adventure : PLAYING_ADVENTURES) {
             // If Adventure has expired user and status of adventure is true (started)
             if (adventure.getStatus().get() && isFirstUserExpired(adventure)) {
-                LOGGER.info("Adventure with itd = '{}' have expired first user.", adventure.getId());
+                LOGGER.info("Adventure with id = '{}' have expired first user.", adventure.getId());
                 adventuresToDelete.add(adventure);
             } else if (adventure.getStatus().get() && isSecondUserExpired(adventure)) {
                 LOGGER.info("Adventure with id = '{}' have expired second user.", adventure.getId());
