@@ -1,8 +1,10 @@
 package by.heap.service;
 
 import by.heap.entity.User;
+import by.heap.entity.view.UserJsonView;
 import by.heap.repository.user.UserRepository;
 import by.heap.security.HeapApplicationContext;
+import com.fasterxml.jackson.annotation.JsonView;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -24,16 +26,19 @@ public class UserService {
     private HeapApplicationContext applicationContext;
 
     @RequestMapping(value = "/{id}", method = RequestMethod.POST)
+    @JsonView(UserJsonView.Info.class)
     public User updateUser(@PathVariable Long id, User update) {
         return update(userRepository.findOne(id), update);
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
+    @JsonView(UserJsonView.Info.class)
     public User getUser(@PathVariable Long id) {
         return userRepository.findOne(id);
     }
 
     @RequestMapping(method = RequestMethod.POST)
+    @JsonView(UserJsonView.Info.class)
     public User updateCurrentUser(User update) {
         User user = applicationContext.getCurrentUser();
         return update(user, update);
@@ -60,6 +65,7 @@ public class UserService {
     }
 
     @RequestMapping(method = RequestMethod.GET)
+    @JsonView(UserJsonView.Info.class)
     public User getCurrentUser() {
         return applicationContext.getCurrentUser();
     }
