@@ -1,10 +1,15 @@
 package by.heap.service;
 
+import by.heap.entity.Adventure;
+import by.heap.entity.User;
+import by.heap.security.HeapApplicationContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.time.Instant;
@@ -20,9 +25,27 @@ public class AdventureService {
 
     private static final Set<UserHolder> USER_HOLDERS = Collections.newSetFromMap(new ConcurrentHashMap<>());
 
+    @Autowired
+    private HeapApplicationContext applicationContext;
+
     @Scheduled(fixedRate = 5000)
     public void doSomething() {
         // TODO: Implement logic here
         LOGGER.error(Instant.now().toString());
     }
+
+    @RequestMapping(method = RequestMethod.PUT)
+    public Adventure heartbeat() {
+        final User currentUser = applicationContext.getCurrentUser();
+        Adventure currentAdventure = null;
+        for (UserHolder userHolder : USER_HOLDERS) {
+            if (userHolder.getAdventure().getFirstUser().equals(currentUser)) {
+                userHolder.setInstant(Instant.now());
+                currentAdventure = userHolder.getAdventure();
+                break;
+            }
+        }
+        return currentAdventure;
+    }
+
 }
