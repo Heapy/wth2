@@ -1,5 +1,6 @@
 package by.heap.service;
 
+import by.heap.entity.Interest;
 import by.heap.entity.User;
 import by.heap.entity.view.UserJsonView;
 import by.heap.repository.user.UserRepository;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 @RestController
 @RequestMapping(value = "/user", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -35,6 +37,11 @@ public class UserService {
     @JsonView(UserJsonView.Info.class)
     public User getUser(@PathVariable Long id) {
         return userRepository.findOne(id);
+    }
+
+    @RequestMapping(value = "/{id}/interests", method = RequestMethod.GET)
+    public Set<Interest> getInterests(@PathVariable Long id) {
+        return userRepository.findOne(id).getInterests();
     }
 
     @RequestMapping(method = RequestMethod.POST)
