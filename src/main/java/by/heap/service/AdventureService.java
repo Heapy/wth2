@@ -2,11 +2,9 @@ package by.heap.service;
 
 import by.heap.entity.Adventure;
 import by.heap.entity.User;
-import by.heap.repository.AbstractRepository;
 import by.heap.repository.AdventureRepository;
 import by.heap.security.HeapApplicationContext;
 import by.heap.service.dto.HeartbeatDto;
-import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,12 +18,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
-import java.time.temporal.TemporalUnit;
 import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.stream.IntStream;
 
 @RestController
 @RequestMapping(value = "/adventure", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -44,7 +38,7 @@ public class AdventureService {
     private AdventureRepository adventureRepository;
 
     @Scheduled(fixedRate = 3000)
-    public void checkFotOutdatedUsers() {
+    public void checkForOutdatedUsers() {
         List<Adventure> adventuresToDelete = new ArrayList<>();
         for (Adventure adventure : PENDING_ADVENTURES) {
             // If Adventure has expired user and status of adventure is false (not started)
@@ -53,23 +47,23 @@ public class AdventureService {
                 adventuresToDelete.add(adventure);
             } else if (!adventure.getStatus().get()) {
                 LOGGER.info("Adventure with id = '{}' have non expired first user.", adventure.getId());
-            };
+            }
         }
         PENDING_ADVENTURES.removeAll(adventuresToDelete);
     }
 
     @Scheduled(fixedRate = 30000)
-    public void checkFotOutdatedUsersInGame() {
+    public void checkForOutdatedUsersInGame() {
         List<Adventure> adventuresToDelete = new ArrayList<>();
         for (Adventure adventure : PLAYING_ADVENTURES) {
-            // If Adventure has expired user and status of adventure is false (not started)
+            // If Adventure has expired user and status of adventure is true (started)
             if (adventure.getStatus().get() && isFirstUserExpired(adventure)) {
                 LOGGER.info("Adventure with id = '{}' have expired first user.", adventure.getId());
                 adventuresToDelete.add(adventure);
             } else if (adventure.getStatus().get() && isSecondUserExpired(adventure)) {
                 LOGGER.info("Adventure with id = '{}' have expired second user.", adventure.getId());
                 adventuresToDelete.add(adventure);
-            };
+            }
         }
         PLAYING_ADVENTURES.removeAll(adventuresToDelete);
     }
@@ -99,6 +93,7 @@ public class AdventureService {
         for (Adventure adventure : PENDING_ADVENTURES) {
             if (adventure.getId().equals(id)) {
                 adventure.getFirstUser().setHeartbeat(Instant.now());
+                break;
             }
         }
         return new HeartbeatDto(null, null, false, null);
@@ -111,16 +106,20 @@ public class AdventureService {
                 Long currentUserId = applicationContext.getCurrentUserId();
                 if (adventure.getFirstUser().getId().equals(currentUserId)) {
                     adventure.getFirstUser().setLongitude(heartbeatDto.longitude).setLatitude(heartbeatDto.latitude);
-                    return new HeartbeatDto(adventure.getSecondUser().getLatitude(), adventure.getSecondUser().getLongitude(), true, adventure.getToken());
+                    return new HeartbeatDto(adventure.getSecondUser().getLatitude(), adventure.getSecondUser()
+                                                                                              .getLongitude(), true, adventure
+                            .getToken());
                 } else if (adventure.getSecondUser().getId().equals(currentUserId)) {
                     adventure.getSecondUser().setLongitude(heartbeatDto.longitude).setLatitude(heartbeatDto.latitude);
-                    return new HeartbeatDto(adventure.getFirstUser().getLatitude(), adventure.getFirstUser().getLongitude(), true, adventure.getToken());
+                    return new HeartbeatDto(adventure.getFirstUser().getLatitude(), adventure.getFirstUser()
+                                                                                             .getLongitude(), true, adventure
+                            .getToken());
                 } else {
                     LOGGER.error("Приплыли");
                 }
             }
         }
-        return new HeartbeatDto(null, null,false, null);
+        return new HeartbeatDto(null, null, false, null);
     }
 
     @RequestMapping(method = RequestMethod.POST)
@@ -151,9 +150,9 @@ public class AdventureService {
 
     private Adventure createNewAdventureAndWait(User user) {
         Adventure adventure = new Adventure()
-            .setFirstUser(user)
-            .setStatus(new AtomicBoolean(false))
-            .setToken(String.valueOf(new Random().ints(100000, 1000000).findAny().getAsInt()));
+                .setFirstUser(user)
+                .setStatus(new AtomicBoolean(false))
+                .setToken(String.valueOf(new Random().ints(100000, 1000000).findAny().getAsInt()));
         adventure.getFirstUser().setHeartbeat(Instant.now());
         adventureRepository.save(adventure);
         PENDING_ADVENTURES.add(adventure);
