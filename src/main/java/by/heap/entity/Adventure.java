@@ -15,10 +15,10 @@ import java.util.concurrent.atomic.AtomicBoolean;
 @Entity
 public class Adventure extends AbstractEntity {
 
-    @ManyToOne
+    @ManyToOne(optional = false)
     private User firstUser;
 
-    @ManyToOne
+    @ManyToOne(optional = false)
     private User secondUser;
 
     @Column
