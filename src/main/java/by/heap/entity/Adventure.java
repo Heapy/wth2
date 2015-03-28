@@ -18,7 +18,7 @@ public class Adventure extends AbstractEntity {
     @ManyToOne(optional = false)
     private User firstUser;
 
-    @ManyToOne(optional = false)
+    @ManyToOne
     private User secondUser;
 
     @Column
