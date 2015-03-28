@@ -6,8 +6,6 @@ import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
-import javax.annotation.PostConstruct;
-
 /**
  * For hosting static files inside war.
  *
@@ -23,6 +21,7 @@ public class HeapWebMvcConfigurerAdapter extends WebMvcConfigurerAdapter {
         registry.addResourceHandler("/assets/**").addResourceLocations("classpath:/public/assets/");
         registry.addResourceHandler("/*.html").addResourceLocations("classpath:/public/");
     }
+
 
     @Override
     public void addViewControllers(ViewControllerRegistry registry) {

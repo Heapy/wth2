@@ -71,13 +71,13 @@ var uiFeatures = (function () {
 
     $this.init = function(){
 
-        $(".button-collapse").sideNav();
         $this.correctSectionHeight();
         $( window ).resize(function() {
             $this.correctSectionHeight();
         });
         $this.initWaypoints();
     };
+
 
     $this.correctSectionHeight = function () {
         var footerHeight = document.getElementsByTagName("footer")[0].offsetHeight;
