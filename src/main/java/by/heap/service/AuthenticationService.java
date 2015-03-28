@@ -6,6 +6,7 @@ import by.heap.security.AuthenticationHelper;
 import by.heap.security.HeapUserDetails;
 import by.heap.service.dto.LoginRequestDto;
 import by.heap.service.dto.LoginResponceDto;
+import com.google.common.base.Preconditions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -84,12 +85,13 @@ public class AuthenticationService {
     @ResponseStatus(value = HttpStatus.OK)
     public LoginResponceDto register(@RequestBody final User user) {
         try {
+            Preconditions.checkArgument(user.getInterests().size() > 10, "Not enough interests");
             user.setPassword(passwordEncoder.encode(user.getPassword()));
             userRepository.save(user);
             return login(new LoginRequestDto(user.getUsername(), user.getPassword()));
         } catch (Exception e) {
             Optional.ofNullable(user.getUsername()).ifPresent(username -> {
-                LOGGER.warn("Unsuccessful authentication attempt with username '{}'.", username);
+                LOGGER.warn("Unsuccessful registration attempt with username '{}'.", username);
             });
             // TODO: Hackaton style
             throw new RuntimeException("An exception during authentication.", e);
