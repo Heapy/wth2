@@ -83,8 +83,9 @@ public class User extends AbstractEntity {
         return interests;
     }
 
-    public void setInterests(List<String> interests) {
+    public User setInterests(List<String> interests) {
         this.interests = interests;
+        return this;
     }
 
     public Long getKarma() {

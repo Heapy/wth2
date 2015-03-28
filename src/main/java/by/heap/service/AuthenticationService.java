@@ -1,6 +1,7 @@
 package by.heap.service;
 
 import by.heap.entity.User;
+import by.heap.repository.user.UserRepository;
 import by.heap.security.AuthenticationHelper;
 import by.heap.security.HeapUserDetails;
 import by.heap.service.dto.LoginRequestDto;
@@ -16,6 +17,7 @@ import org.springframework.security.authentication.InternalAuthenticationService
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
@@ -31,6 +33,12 @@ public class AuthenticationService {
 
     @Autowired
     private AuthenticationHelper authenticationHelper;
+
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     @ResponseStatus(value = HttpStatus.OK)
@@ -75,6 +83,16 @@ public class AuthenticationService {
     @RequestMapping(value = "/register", method = RequestMethod.POST)
     @ResponseStatus(value = HttpStatus.OK)
     public LoginResponceDto register(@RequestBody final User newUser) {
+        try {
+            newUser.setPassword(passwordEncoder.encode(newUser.getPassword()));
+            userRepository.save(newUser);
+        } catch (Exception e) {
+            Optional.ofNullable(newUser.getUsername()).ifPresent(username -> {
+                LOGGER.warn("Unsuccessful authentication attempt with username '{}'.", username);
+            });
+            // TODO: Hackaton style
+            throw new RuntimeException("An exception during authentication.", e);
+        }
         return null;
     }
 
