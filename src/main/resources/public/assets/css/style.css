@@ -1,0 +1,139 @@
+@font-face {
+    font-family: barley;
+    src: url(Barely_Handwritten.ttf);
+}
+
+html, body {
+    margin: 0;
+    padding: 0;
+}
+
+.clearfix:after {
+    content: " "; /* Older browser do not support empty content */
+    visibility: hidden;
+    display: block;
+    height: 0;
+    clear: both;
+}
+
+.page {
+    font-family: 'Play', sans-serif;
+    padding-top: 100px;
+}
+/*---HEADER-BEGIN--*/
+
+header {
+    z-index: 1000;
+    background-color: white;
+    width: 100%;
+    position: fixed;
+    height: 60px;
+    top: 0;
+    box-shadow: 0px 0px 47px 13px rgba(52, 50, 50, 1);
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: stretch;
+
+}
+
+header a {
+    text-decoration: none;
+}
+
+.home-link {
+    height: 100%;
+    padding: 0 7px;
+    line-height: 60px;
+    align-self: center;
+    font-size: 2em;
+    margin-left: 40px;
+    display: inline-block;
+    transition: all 0.5s;
+}
+
+.menu {
+
+    float: right;
+    margin-right: 40px;
+    align-self: center;
+}
+
+.menu ul {
+    font-size: 0;
+    display: flex;
+    flex-direction: row;
+}
+
+.menu li {
+    font-size: 18px;
+    display: inline;
+    padding: 20px;
+    transition: all 0.5s;
+    cursor: pointer;
+    align-self: center;
+}
+
+.menu li a{
+    text-decoration: none;
+}
+
+.menu li:hover, .selected {
+    background-color: rgba(0, 0, 0, 0.04);
+}
+
+.top-players{
+    background-color: white;
+    width: 80%;
+    margin: 50px auto;
+    border-radius: 3px;
+    padding-top: 50px;
+    box-shadow: #000000 0 0 89px 27px;
+}
+
+.players {
+    width: 70%;
+    margin: 0 auto;
+}
+
+.player {
+    width: 33%;
+    margin: 25px 0;
+    float: left;
+    text-align: center;
+}
+
+.player-description {
+    width: 70%;
+    margin: 0 auto;
+}
+
+.player-image {
+    width: 70%;
+    margin: 0 auto;
+}
+
+.player-image img {
+    border-radius: 50px;
+}
+
+
+.map{
+    width: 90%;
+    margin: 30px auto;
+}
+.map div {
+    height: 100%;
+}
+
+
+
+.top-players-message {
+    text-align: center;
+    font-size: 2em;
+}
+
+footer {
+    background: white;
+    /*height: 71px;*/
+}
