@@ -67,6 +67,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.POST, "/auth/login")
                 .antMatchers(HttpMethod.GET, "/users/top")
                 .antMatchers(HttpMethod.GET, "/users/location")
+                .antMatchers(HttpMethod.GET, "/user/**")
                 .antMatchers(HttpMethod.GET, "/")
                 .antMatchers(HttpMethod.GET, "/*.html")
                 .antMatchers(HttpMethod.GET, "/assets/**");
