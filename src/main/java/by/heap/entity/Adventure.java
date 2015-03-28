@@ -27,6 +27,9 @@ public class Adventure extends AbstractEntity {
     @Column
     private AtomicBoolean status;
 
+    @Column
+    private GameStatus gameStatus;
+
     public User getFirstUser() {
         return firstUser;
     }
@@ -60,6 +63,15 @@ public class Adventure extends AbstractEntity {
 
     public Adventure setStatus(AtomicBoolean status) {
         this.status = status;
+        return this;
+    }
+
+    public GameStatus getGameStatus() {
+        return gameStatus;
+    }
+
+    public Adventure setGameStatus(GameStatus gameStatus) {
+        this.gameStatus = gameStatus;
         return this;
     }
 }

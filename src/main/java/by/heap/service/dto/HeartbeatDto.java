@@ -1,5 +1,6 @@
 package by.heap.service.dto;
 
+import by.heap.entity.GameStatus;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class HeartbeatDto {
@@ -11,13 +12,13 @@ public class HeartbeatDto {
     public String longitude;
 
     @JsonProperty
-    public Boolean status;
+    public GameStatus status;
 
     @JsonProperty
     public String token;
 
 
-    public HeartbeatDto(String latitude, String longitude, Boolean status, String token) {
+    public HeartbeatDto(String latitude, String longitude, GameStatus status, String token) {
         this.latitude = latitude;
         this.longitude = longitude;
         this.status = status;

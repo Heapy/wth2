@@ -1,6 +1,7 @@
 package by.heap.service;
 
 import by.heap.entity.Adventure;
+import by.heap.entity.GameStatus;
 import by.heap.entity.User;
 import by.heap.repository.AdventureRepository;
 import by.heap.security.HeapApplicationContext;
@@ -96,7 +97,7 @@ public class AdventureService {
                 break;
             }
         }
-        return new HeartbeatDto(null, null, false, null);
+        return new HeartbeatDto(null, null, GameStatus.SEARCHING, null);
     }
 
 
@@ -104,22 +105,33 @@ public class AdventureService {
         for (Adventure adventure : PLAYING_ADVENTURES) {
             if (adventure.getId().equals(id)) {
                 Long currentUserId = applicationContext.getCurrentUserId();
-                if (adventure.getFirstUser().getId().equals(currentUserId)) {
-                    adventure.getFirstUser().setLongitude(heartbeatDto.longitude).setLatitude(heartbeatDto.latitude);
-                    return new HeartbeatDto(adventure.getSecondUser().getLatitude(), adventure.getSecondUser()
-                                                                                              .getLongitude(), true, adventure
+                switch (adventure.getGameStatus()) {
+                    case PLAYING:
+                        return playing(heartbeatDto, adventure, currentUserId);
+                    case AFTER_GAME:
+                        return new HeartbeatDto(null, null, GameStatus.AFTER_GAME, adventure
                             .getToken());
-                } else if (adventure.getSecondUser().getId().equals(currentUserId)) {
-                    adventure.getSecondUser().setLongitude(heartbeatDto.longitude).setLatitude(heartbeatDto.latitude);
-                    return new HeartbeatDto(adventure.getFirstUser().getLatitude(), adventure.getFirstUser()
-                                                                                             .getLongitude(), true, adventure
-                            .getToken());
-                } else {
-                    LOGGER.error("Приплыли");
                 }
             }
         }
-        return new HeartbeatDto(null, null, false, null);
+        return new HeartbeatDto(null, null, GameStatus.ERROR, null);
+    }
+
+    private HeartbeatDto playing(HeartbeatDto heartbeatDto, Adventure adventure, Long currentUserId) {
+        if (adventure.getFirstUser().getId().equals(currentUserId)) {
+            adventure.getFirstUser().setLongitude(heartbeatDto.longitude).setLatitude(heartbeatDto.latitude);
+            return new HeartbeatDto(adventure.getSecondUser().getLatitude(), adventure.getSecondUser()
+                .getLongitude(), GameStatus.PLAYING, adventure
+                .getToken());
+        } else if (adventure.getSecondUser().getId().equals(currentUserId)) {
+            adventure.getSecondUser().setLongitude(heartbeatDto.longitude).setLatitude(heartbeatDto.latitude);
+            return new HeartbeatDto(adventure.getFirstUser().getLatitude(), adventure.getFirstUser()
+                .getLongitude(), GameStatus.PLAYING, adventure
+                .getToken());
+        } else {
+            LOGGER.error("Приплыли");
+            return new HeartbeatDto(null, null, GameStatus.ERROR, null);
+        }
     }
 
     @RequestMapping(method = RequestMethod.POST)
