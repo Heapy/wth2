@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -37,6 +38,9 @@ public class User extends AbstractEntity {
 
     @Column
     private String latitude;
+
+    @Column
+    private Instant heartbeat;
 
 
     public String getDisplayName() {
@@ -108,6 +112,15 @@ public class User extends AbstractEntity {
 
     public User setLatitude(String latitude) {
         this.latitude = latitude;
+        return this;
+    }
+
+    public Instant getHeartbeat() {
+        return heartbeat;
+    }
+
+    public User setHeartbeat(Instant heartbeat) {
+        this.heartbeat = heartbeat;
         return this;
     }
 }
