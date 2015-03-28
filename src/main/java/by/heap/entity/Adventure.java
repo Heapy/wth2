@@ -4,7 +4,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * TODO: CommentMe!
- *
+ *  @Deprecated see SecurityConfig.passwordEncoder
  * @author Ibragimov Ruslan
  */
 @Deprecated
