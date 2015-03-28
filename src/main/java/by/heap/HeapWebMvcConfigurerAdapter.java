@@ -20,8 +20,8 @@ public class HeapWebMvcConfigurerAdapter extends WebMvcConfigurerAdapter {
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         // TODO: Change to actual values
-        registry.addResourceHandler("/assets/**").addResourceLocations("/dist/assets/");
-        registry.addResourceHandler("/*.html").addResourceLocations("/dist/");
+        registry.addResourceHandler("/assets/**").addResourceLocations("classpath:/public/assets/");
+        registry.addResourceHandler("/*.html").addResourceLocations("classpath:/public/");
     }
 
     @Override

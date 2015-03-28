@@ -23,10 +23,6 @@ buildscript {
     }
 }
 
-jar {
-    baseName = 'heap-server'
-}
-
 dependencies {
     // tag::jetty[]
     compile('org.springframework.boot:spring-boot-starter-web') {
