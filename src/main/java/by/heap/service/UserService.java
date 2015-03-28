@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
 import java.util.Objects;
 
 @RestController
@@ -36,6 +37,11 @@ public class UserService {
     public User updateCurrentUser(User update) {
         User user = applicationContext.getCurrentUser();
         return update(user, update);
+    }
+
+    @RequestMapping(value = "top", method = RequestMethod.GET)
+    public List<User> top(User update) {
+        return null;
     }
 
     private User update(User user, User update) {
