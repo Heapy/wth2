@@ -28,7 +28,7 @@ public class User extends AbstractEntity {
     private String secret = UUID.randomUUID().toString();
 
     @OneToMany
-    private List<Interest> interests = new ArrayList<>();
+    private List<String> interests = new ArrayList<>();
 
     @Column
     private Long karma = 0L;
@@ -79,13 +79,12 @@ public class User extends AbstractEntity {
         return this;
     }
 
-    public List<Interest> getInterests() {
+    public List<String> getInterests() {
         return interests;
     }
 
-    public User setInterests(List<Interest> interests) {
+    public void setInterests(List<String> interests) {
         this.interests = interests;
-        return this;
     }
 
     public Long getKarma() {

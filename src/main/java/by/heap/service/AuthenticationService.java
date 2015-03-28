@@ -1,5 +1,6 @@
 package by.heap.service;
 
+import by.heap.entity.User;
 import by.heap.security.AuthenticationHelper;
 import by.heap.security.HeapUserDetails;
 import by.heap.service.dto.LoginRequestDto;
@@ -73,7 +74,7 @@ public class AuthenticationService {
 
     @RequestMapping(value = "/register", method = RequestMethod.POST)
     @ResponseStatus(value = HttpStatus.OK)
-    public LoginResponceDto register(@RequestBody final LoginRequestDto request) {
+    public LoginResponceDto register(@RequestBody final User newUser) {
         return null;
     }
 
