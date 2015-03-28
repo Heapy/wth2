@@ -44,7 +44,7 @@ public class AdventureService {
     private AdventureRepository adventureRepository;
 
     @Scheduled(fixedRate = 3000)
-    public void checkFotOutdatedUsers() {
+    public void checkForOutdatedUsers() {
         List<Adventure> adventuresToDelete = new ArrayList<>();
         for (Adventure adventure : PENDING_ADVENTURES) {
             // If Adventure has expired user and status of adventure is false (not started)
@@ -53,23 +53,23 @@ public class AdventureService {
                 adventuresToDelete.add(adventure);
             } else if (!adventure.getStatus().get()) {
                 LOGGER.info("Adventure with id = '{}' have non expired first user.", adventure.getId());
-            };
+            }
         }
         PENDING_ADVENTURES.removeAll(adventuresToDelete);
     }
 
     @Scheduled(fixedRate = 30000)
-    public void checkFotOutdatedUsersInGame() {
+    public void checkForOutdatedUsersInGame() {
         List<Adventure> adventuresToDelete = new ArrayList<>();
         for (Adventure adventure : PLAYING_ADVENTURES) {
-            // If Adventure has expired user and status of adventure is false (not started)
+            // If Adventure has expired user and status of adventure is true (started)
             if (adventure.getStatus().get() && isFirstUserExpired(adventure)) {
                 LOGGER.info("Adventure with id = '{}' have expired first user.", adventure.getId());
                 adventuresToDelete.add(adventure);
             } else if (adventure.getStatus().get() && isSecondUserExpired(adventure)) {
                 LOGGER.info("Adventure with id = '{}' have expired second user.", adventure.getId());
                 adventuresToDelete.add(adventure);
-            };
+            }
         }
         PLAYING_ADVENTURES.removeAll(adventuresToDelete);
     }
