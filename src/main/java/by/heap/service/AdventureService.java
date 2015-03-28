@@ -2,6 +2,8 @@ package by.heap.service;
 
 import by.heap.entity.Adventure;
 import by.heap.entity.User;
+import by.heap.repository.AbstractRepository;
+import by.heap.repository.AdventureRepository;
 import by.heap.security.HeapApplicationContext;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
@@ -32,6 +34,9 @@ public class AdventureService {
 
     @Autowired
     private HeapApplicationContext applicationContext;
+
+    @Autowired
+    private AdventureRepository adventureRepository;
 
     @Scheduled(fixedRate = 5000)
     public void doSomething() {
@@ -84,6 +89,7 @@ public class AdventureService {
             .setFirstUser(user)
             .setStatus(new AtomicBoolean(false))
             .setToken(String.valueOf(randomTokens.findAny().getAsInt()));
+        adventureRepository.save(newAdventure);
         USER_HOLDERS.add(
             new UserHolder()
                 .setInstant(Instant.now())
