@@ -39,11 +39,6 @@ public class UserService {
         return update(user, update);
     }
 
-    @RequestMapping(value = "top", method = RequestMethod.GET)
-    public List<User> top(User update) {
-        return null;
-    }
-
     private User update(User user, User update) {
         if (Objects.nonNull(update.getDisplayName())) {
             user.setDisplayName(update.getDisplayName());
