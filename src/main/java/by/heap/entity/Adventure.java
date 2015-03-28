@@ -4,9 +4,10 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * TODO: CommentMe!
- *
+ *  @Deprecated see SecurityConfig.passwordEncoder
  * @author Ibragimov Ruslan
  */
+@Deprecated
 public class Adventure {
 
     private User firstUser;
