@@ -8,6 +8,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
 import java.time.Instant;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
@@ -31,7 +32,7 @@ public class User extends AbstractEntity {
     private String secret = UUID.randomUUID().toString();
 
     @OneToMany
-    private Set<Interest> interests;
+    private Set<Interest> interests = new HashSet<>();
 
     @Column
     @JsonView(UserJsonView.Top.class)
