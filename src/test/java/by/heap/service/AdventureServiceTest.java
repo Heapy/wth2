@@ -3,16 +3,18 @@ package by.heap.service;
 import by.heap.entity.Interest;
 import by.heap.entity.User;
 import org.junit.Test;
+import org.springframework.util.ReflectionUtils;
 
+import java.lang.invoke.MethodHandles;
+import java.lang.reflect.Method;
+import java.time.Instant;
 import java.util.Arrays;
 import java.util.HashSet;
 
 import static org.junit.Assert.*;
 
-/**
- * Created by Влад on 28.03.2015.
- */
 public class AdventureServiceTest {
+
     @Test
     public void testUserHasSameInterestsTrue() throws Exception {
         User user1 = new User().setInterests(new HashSet<>(Arrays.asList(
@@ -47,4 +49,12 @@ public class AdventureServiceTest {
 
     }
 
+    @Test
+    public void testIsUserExpired() throws Exception {
+        User user = new User().setHeartbeat(Instant.now());
+        Method method = AdventureService.class.getDeclaredMethod("isUserExpired", User.class);
+        method.setAccessible(true);
+
+        assertFalse((Boolean) ReflectionUtils.invokeMethod(method, null, user));
+    }
 }

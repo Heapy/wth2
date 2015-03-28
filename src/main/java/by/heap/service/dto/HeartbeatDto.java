@@ -17,14 +17,13 @@ public class HeartbeatDto {
     @JsonProperty
     public String token;
 
+    public HeartbeatDto() {
+    }
 
     public HeartbeatDto(String latitude, String longitude, GameStatus status, String token) {
         this.latitude = latitude;
         this.longitude = longitude;
         this.status = status;
         this.token = token;
-    }
-
-    public HeartbeatDto() {
     }
 }

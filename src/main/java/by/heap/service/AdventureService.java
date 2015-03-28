@@ -69,16 +69,16 @@ public class AdventureService {
         PLAYING_ADVENTURES.removeAll(adventuresToDelete);
     }
 
-    private boolean isFirstUserExpired(Adventure adventure) {
+    private static boolean isFirstUserExpired(Adventure adventure) {
         return isUserExpired(adventure.getFirstUser());
     }
 
-    private boolean isSecondUserExpired(Adventure adventure) {
+    private static boolean isSecondUserExpired(Adventure adventure) {
         return isUserExpired(adventure.getSecondUser());
     }
 
-    private boolean isUserExpired(User user) {
-        return user.getHeartbeat().isBefore(Instant.now().plus(10, ChronoUnit.SECONDS));
+    private static boolean isUserExpired(User user) {
+        return user.getHeartbeat().getEpochSecond() + 10 < Instant.now().getEpochSecond();
     }
 
     @RequestMapping(value = "/{id}/heartbeat", method = RequestMethod.PUT)
@@ -109,8 +109,7 @@ public class AdventureService {
                     case PLAYING:
                         return playing(heartbeatDto, adventure, currentUserId);
                     case AFTER_GAME:
-                        return new HeartbeatDto(null, null, GameStatus.AFTER_GAME, adventure
-                            .getToken());
+                        return new HeartbeatDto(null, null, GameStatus.AFTER_GAME, adventure.getToken());
                 }
             }
         }
@@ -121,13 +120,11 @@ public class AdventureService {
         if (adventure.getFirstUser().getId().equals(currentUserId)) {
             adventure.getFirstUser().setLongitude(heartbeatDto.longitude).setLatitude(heartbeatDto.latitude);
             return new HeartbeatDto(adventure.getSecondUser().getLatitude(), adventure.getSecondUser()
-                .getLongitude(), GameStatus.PLAYING, adventure
-                .getToken());
+                .getLongitude(), GameStatus.PLAYING, adventure.getToken());
         } else if (adventure.getSecondUser().getId().equals(currentUserId)) {
             adventure.getSecondUser().setLongitude(heartbeatDto.longitude).setLatitude(heartbeatDto.latitude);
             return new HeartbeatDto(adventure.getFirstUser().getLatitude(), adventure.getFirstUser()
-                .getLongitude(), GameStatus.PLAYING, adventure
-                .getToken());
+                .getLongitude(), GameStatus.PLAYING, adventure.getToken());
         } else {
             LOGGER.error("Приплыли");
             return new HeartbeatDto(null, null, GameStatus.ERROR, null);
