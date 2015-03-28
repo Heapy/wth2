@@ -131,7 +131,7 @@ public class AdventureService {
     }
 
     @RequestMapping(method = RequestMethod.POST)
-    public Adventure findMeAdventureOnMyAss() {
+    public HeartbeatDto findMeAdventureOnMyAss(HeartbeatDto heartbeatDto) {
         final User currentUser = applicationContext.getCurrentUser();
         Adventure foundAdventure = null;
         for (Adventure adventure : PENDING_ADVENTURES) {
@@ -149,7 +149,12 @@ public class AdventureService {
         if (foundAdventure == null) {
             foundAdventure = createNewAdventureAndWait(currentUser);
         }
-        return foundAdventure;
+        return new HeartbeatDto(
+            foundAdventure.getFirstUser().getLatitude(),
+            foundAdventure.getFirstUser().getLongitude(),
+            foundAdventure.getGameStatus(),
+            foundAdventure.getToken()
+        );
     }
 
     public boolean hasSameInterests(User user1, User user2) {
@@ -160,6 +165,7 @@ public class AdventureService {
         Adventure adventure = new Adventure()
                 .setFirstUser(user)
                 .setStatus(new AtomicBoolean(false))
+                .setGameStatus(GameStatus.SEARCHING)
                 .setToken(String.valueOf(new Random().ints(100000, 1000000).findAny().getAsInt()));
         adventure.getFirstUser().setHeartbeat(Instant.now());
         adventureRepository.save(adventure);
