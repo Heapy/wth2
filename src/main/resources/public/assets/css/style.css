@@ -47,9 +47,14 @@ header a {
     line-height: 60px;
     align-self: center;
     font-size: 2em;
-    margin-left: 40px;
+    margin-left: 60px;
     display: inline-block;
     transition: all 0.5s;
+}
+
+
+.home-link {
+text-decoration: none;
 }
 
 .menu {
@@ -125,8 +130,6 @@ header a {
 .map div {
     height: 100%;
 }
-
-
 
 .top-players-message {
     text-align: center;

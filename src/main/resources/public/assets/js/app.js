@@ -69,10 +69,10 @@ var uiFeatures = (function () {
 
     var $this = {};
 
-    $this.init = function(){
+    $this.init = function () {
 
         $this.correctSectionHeight();
-        $( window ).resize(function() {
+        $(window).resize(function () {
             $this.correctSectionHeight();
         });
         $this.initWaypoints();
@@ -84,19 +84,15 @@ var uiFeatures = (function () {
         var headerHeight = document.getElementsByTagName("header")[0].offsetHeight;
         var sections = document.getElementsByClassName("land");
         for (var i = 0; i < sections.length; i++) {
-            if(sections[i].offsetHeight < window.innerHeight - headerHeight) {
-                sections[i].style.height = window.innerHeight - headerHeight -50 + 'px';
+            if (sections[i].offsetHeight < window.innerHeight - headerHeight - 50) {
+                sections[i].style.height = window.innerHeight - headerHeight - 50 + 'px';
             }
         }
-        //if(sections[sections.length - 1].offsetHeight < window.innerHeight - headerHeight -footerHeight) {
-        //    sections[sections.length - 1].style.height = window.innerHeight - footerHeight - headerHeight + 'px';
-        //}
     };
 
 
-
     $this.initWaypoints = function () {
-        //$('.sticky-nav').waypoint('sticky');
+
     };
     return $this;
 
