@@ -75,8 +75,8 @@ public class AdventureService {
         return foundAdventure;
     }
 
-    private boolean hasSameInterests(User user1, User user2) {
-        return !Sets.intersection(new HashSet<>(user1.getInterests()), new HashSet<>(user2.getInterests())).isEmpty();
+    public boolean hasSameInterests(User user1, User user2) {
+        return !Sets.intersection(user1.getInterests(), user2.getInterests()).isEmpty();
     }
 
     private Adventure createNewAdventureAndWait(User user) {
