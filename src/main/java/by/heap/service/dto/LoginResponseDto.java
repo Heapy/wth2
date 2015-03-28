@@ -10,4 +10,7 @@ public class LoginResponseDto {
     public LoginResponseDto(final String token) {
         this.token = token;
     }
+
+    public LoginResponseDto() {
+    }
 }

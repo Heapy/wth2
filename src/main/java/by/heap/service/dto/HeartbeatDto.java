@@ -23,4 +23,7 @@ public class HeartbeatDto {
         this.status = status;
         this.token = token;
     }
+
+    public HeartbeatDto() {
+    }
 }
