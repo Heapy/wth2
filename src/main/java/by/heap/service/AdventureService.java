@@ -99,6 +99,7 @@ public class AdventureService {
         for (Adventure adventure : PENDING_ADVENTURES) {
             if (adventure.getId().equals(id)) {
                 adventure.getFirstUser().setHeartbeat(Instant.now());
+                break;
             }
         }
         return new HeartbeatDto(null, null, false, null);
