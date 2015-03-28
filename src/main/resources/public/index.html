@@ -11,8 +11,8 @@
     <script src="assets/js/lib/waypoints-sticky.js"></script>
     <style type="text/css">
         body {
-            background: url(http://mymaplist.com/img/parallax/back.png);
-            background-color: #444;
+            /*background: url(http://mymaplist.com/img/parallax/back.png);*/
+            /*background-color: #444;*/
             background: url(http://mymaplist.com/img/parallax/pinlayer2.png), url(http://mymaplist.com/img/parallax/pinlayer1.png), url(http://mymaplist.com/img/parallax/back.png);
         }
 
@@ -25,9 +25,9 @@
     <a class="home-link" href="#profile">HEAP</a>
     <nav class="menu sticky-nav">
         <ul>
-            <li><a class="menu-link" href="#profile" onclick="scrollTo('profile', 100)">Profile</a></li>
-            <li><a class="menu-link" href="#top" onclick="scrollTo('top', 100)">Top Players</a></li>
-            <li><a class="menu-link" href="#map" onclick="scrollTo('map')">Map</a></li>
+            <li onclick="scrollTo('profile', 100)" ><a class="menu-link" href="#profile" >Profile</a></li>
+            <li onclick="scrollTo('top', 100)" ><a class="menu-link" href="#top" >Top Players</a></li>
+            <li onclick="scrollTo('map',1)" ><a class="menu-link" href="#map">Map</a></li>
         </ul>
     </nav>
 </header>
@@ -202,7 +202,7 @@
             <img src="{{avatar}}">
         </div>
         <div class="player-description ">
-            <a href="#{{id}}">{{name}}</a>
+            <a href="#{{id}}">{{displayName}}</a>
             <br/>
             <span>{{karma}} Points</span>
         </div>
@@ -219,7 +219,7 @@
     $(document).ready(function () {
         $(document).mousemove(function (e) {
             TweenLite.to($('body'),
-                    .5,
+                    1,
                     {
                         css: {
                             backgroundPosition: "" + parseInt(event.pageX / 8) + "px " + parseInt(event.pageY / '12') + "px, " + parseInt(event.pageX / '15') + "px " + parseInt(event.pageY / '15') + "px, " + parseInt(event.pageX / '30') + "px " + parseInt(event.pageY / '30') + "px"

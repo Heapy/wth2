@@ -2,6 +2,9 @@
  * Created by alex on 28.03.15.
  */
 "use strict";
+
+var baseUrl = "http://private-anon-2879e03fd-heap.apiary-mock.com";
+
 $(function () {
 
     uiFeatures.init();
@@ -17,7 +20,7 @@ var playersHome = (function () {
     var $this = {};
 
     $this.showTopNine = function () {
-        getData('http://private-anon-2879e03fd-heap.apiary-mock.com/users/top', 'get', {}, function (topPlayers) {
+        getData(baseUrl + '/users/top', 'get', {}, function (topPlayers) {
             var template = $('#player-short-template').html();
             var html = Mustache.to_html(template, topPlayers);
             $('#players').html(html);
@@ -44,16 +47,22 @@ var mapHome = (function () {
             $this.map.behaviors.disable(['drag', 'rightMouseButtonMagnifier', 'scrollZoom']);
 
             var userBalloonLayout = ymaps.templateLayoutFactory.createClass(
-                '<img style="border-radius:50px" src="{{properties.avatar}}">'
+                '<img style="border-radius:50px" src="{{properties.avatar}}">' +
+                '<div style="width:90px;height: 90px;border-radius: 50px; background: white; z-index: -5; position: relative; top: -85px; left: -5px"></div>' +
+                '<span style="background-color: white;font-size: 16px;box-shadow: -1px -1px 15px 0px rgba(50, 50, 50, 0.75); display:inline-block; text-align:center; padding: 5px 7px; width:90px; position: relative; top: -75px; left: -10px">{{properties.displayName}}</span>'
             );
 
-            getData('http://private-anon-2879e03fd-heap.apiary-mock.com/users/location', 'get', {}, function (data) {
+            getData(baseUrl + '/users/location', 'get', {}, function (data) {
                 var users = data.users;
                 for (var i = 0; i < users.length; i++) {
                     $this.map.geoObjects.add(new ymaps.Placemark([users[i].latitude, users[i].longitude], {
-                        avatar: users[i].avatar
+                        avatar: users[i].avatar,
+                        displayName: users[i].displayName
                     }, {
-                        hintLayout: userBalloonLayout
+                        hintLayout: userBalloonLayout,
+                        iconLayout: 'default#image',
+                        iconImageHref: "assets/img/ico.png",
+                        iconImageSize: [40, 40]
                     }));
                 }
             })
@@ -75,12 +84,10 @@ var uiFeatures = (function () {
         $(window).resize(function () {
             $this.correctSectionHeight();
         });
-        $this.initWaypoints();
     };
 
 
     $this.correctSectionHeight = function () {
-        var footerHeight = document.getElementsByTagName("footer")[0].offsetHeight;
         var headerHeight = document.getElementsByTagName("header")[0].offsetHeight;
         var sections = document.getElementsByClassName("land");
         for (var i = 0; i < sections.length; i++) {
@@ -90,10 +97,6 @@ var uiFeatures = (function () {
         }
     };
 
-
-    $this.initWaypoints = function () {
-
-    };
     return $this;
 
 }());
