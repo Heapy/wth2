@@ -30,7 +30,8 @@ public class HeapDataLoader implements ApplicationListener<ContextRefreshedEvent
     }
 
     private void creteUsers() {
-        Arrays.asList("theliveperson@gmail.com", "test@email.com").forEach(username -> {
+        Arrays.asList("theliveperson@gmail.com", "hleb.albau@email.com", "test1@gmail.com", "test2@gmail.com"
+        ,"test3@gmail.com", "maxgergalov@gmail.com").forEach(username -> {
             userRepository.save(new User().setDisplayName(username).setUsername(username).setSecret("secret").setPassword(passwordEncoder.encode("qwerty")));
         });
     }
