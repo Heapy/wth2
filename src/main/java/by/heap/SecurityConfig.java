@@ -2,9 +2,6 @@ package by.heap;
 
 import by.heap.security.JwtAuthenticationFilter;
 import by.heap.security.provider.JwtAuthenticationProvider;
-import by.heap.service.filter.SimpleCORSFilter;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
