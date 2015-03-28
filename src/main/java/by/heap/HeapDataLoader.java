@@ -35,5 +35,4 @@ public class HeapDataLoader implements ApplicationListener<ContextRefreshedEvent
         });
     }
 
-
 }

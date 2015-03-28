@@ -2,8 +2,10 @@ package by.heap.service;
 
 
 import by.heap.entity.User;
+import by.heap.entity.view.UserJsonView;
 import by.heap.repository.Pageable;
 import by.heap.repository.user.UserRepository;
+import com.fasterxml.jackson.annotation.JsonView;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,11 +22,13 @@ public class UsersService {
     private UserRepository userRepository;
 
     @RequestMapping(value = "top", method = RequestMethod.GET)
+    @JsonView(UserJsonView.Top.class)
     public List<User> topUsers() {
         return userRepository.findTopByKarma(Pageable.SEVEN);
     }
 
     @RequestMapping(value = "location", method = RequestMethod.GET)
+    @JsonView(UserJsonView.Location.class)
     public List<User> usersLocation() {
         return userRepository.findAll();
     }

@@ -1,6 +1,9 @@
 package by.heap.entity;
 
+import by.heap.entity.view.CommonJsonView;
+import by.heap.entity.view.UserJsonView;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonView;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -16,9 +19,11 @@ import java.util.UUID;
 public class User extends AbstractEntity {
 
     @Column(nullable = false)
+    @JsonView(UserJsonView.Basic.class)
     private String displayName;
 
     @Column(unique = true)
+    @JsonView(UserJsonView.Info.class)
     private String username;
 
     @JsonIgnore
@@ -32,16 +37,23 @@ public class User extends AbstractEntity {
     private Set<Interest> interests;
 
     @Column
+    @JsonView(UserJsonView.Top.class)
     private Long karma = 0L;
 
     @Column
+    @JsonView(UserJsonView.Location.class)
     private String longitude;
 
     @Column
+    @JsonView(UserJsonView.Location.class)
     private String latitude;
 
     @Column
     private Instant heartbeat;
+
+    @Column
+    @JsonView(UserJsonView.Basic.class)
+    private String avatar;
 
 
     public String getDisplayName() {
@@ -123,5 +135,13 @@ public class User extends AbstractEntity {
     public User setHeartbeat(Instant heartbeat) {
         this.heartbeat = heartbeat;
         return this;
+    }
+
+    public String getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
     }
 }
