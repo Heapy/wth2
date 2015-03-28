@@ -1,4 +1,4 @@
-package by.heap.security.dto;
+package by.heap.service.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 

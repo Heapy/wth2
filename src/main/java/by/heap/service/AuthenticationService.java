@@ -2,8 +2,8 @@ package by.heap.service;
 
 import by.heap.security.AuthenticationHelper;
 import by.heap.security.HeapUserDetails;
-import by.heap.security.dto.LoginRequestDto;
-import by.heap.security.dto.LoginResponceDto;
+import by.heap.service.dto.LoginRequestDto;
+import by.heap.service.dto.LoginResponceDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -69,4 +69,13 @@ public class AuthenticationService {
             throw new RuntimeException("An exception during authentication.", e);
         }
     }
+
+
+    @RequestMapping(value = "/register", method = RequestMethod.POST)
+    @ResponseStatus(value = HttpStatus.OK)
+    public LoginResponceDto register(@RequestBody final LoginRequestDto request) {
+        return null;
+    }
+
+
 }

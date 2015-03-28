@@ -3,7 +3,7 @@ package by.heap.security.provider;
 import by.heap.entity.User;
 import by.heap.repository.user.UserRepository;
 import by.heap.security.HeapUserDetails;
-import by.heap.security.dto.TokenPayload;
+import by.heap.service.dto.TokenPayload;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationProvider;

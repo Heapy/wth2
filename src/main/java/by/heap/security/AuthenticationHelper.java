@@ -1,7 +1,7 @@
 package by.heap.security;
 
 import by.heap.repository.user.UserRepository;
-import by.heap.security.dto.TokenPayload;
+import by.heap.service.dto.TokenPayload;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
