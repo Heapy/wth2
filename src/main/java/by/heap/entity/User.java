@@ -139,7 +139,8 @@ public class User extends AbstractEntity {
         return avatar;
     }
 
-    public void setAvatar(String avatar) {
+    public User setAvatar(String avatar) {
         this.avatar = avatar;
+        return this;
     }
 }
