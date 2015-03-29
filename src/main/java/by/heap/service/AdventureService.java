@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -43,10 +44,10 @@ public class AdventureService {
         for (Adventure adventure : PENDING_ADVENTURES) {
             // If Adventure has expired user and status of adventure is false (not started)
             if (!adventure.getStatus().get() && isFirstUserExpired(adventure)) {
-                LOGGER.info("Adventure with id = '{}' have expired first user.", adventure.getId());
+                LOGGER.info("Adventure with id = '{}' have expired first user with username = '{}'.", adventure.getId(), adventure.getFirstUser().getUsername());
                 adventuresToDelete.add(adventure);
             } else if (!adventure.getStatus().get()) {
-                LOGGER.info("Adventure with id = '{}' have non expired first user.", adventure.getId());
+                LOGGER.info("Adventure with id = '{}' have non expired first user with username = '{}'.", adventure.getId());
             }
         }
         PENDING_ADVENTURES.removeAll(adventuresToDelete);
@@ -58,10 +59,10 @@ public class AdventureService {
         for (Adventure adventure : PLAYING_ADVENTURES) {
             // If Adventure has expired user and status of adventure is true (started)
             if (adventure.getStatus().get() && isFirstUserExpired(adventure)) {
-                LOGGER.info("Adventure with id = '{}' have expired first user.", adventure.getId());
+                LOGGER.info("Adventure with id = '{}' have expired first user with username = '{}'.", adventure.getId(), adventure.getFirstUser().getUsername());
                 adventuresToDelete.add(adventure);
             } else if (adventure.getStatus().get() && isSecondUserExpired(adventure)) {
-                LOGGER.info("Adventure with id = '{}' have expired second user.", adventure.getId());
+                LOGGER.info("Adventure with id = '{}' have expired second user with username = '{}'.", adventure.getId(), adventure.getSecondUser().getUsername());
                 adventuresToDelete.add(adventure);
             }
         }
@@ -81,29 +82,12 @@ public class AdventureService {
     }
 
     @RequestMapping(value = "/{id}/heartbeat", method = RequestMethod.PUT)
-    public HeartbeatDto heartbeat(@PathVariable Long id, HeartbeatDto heartbeatDto) {
-        if (Objects.isNull(heartbeatDto.latitude) || Objects.isNull(heartbeatDto.longitude)) {
-            return heartbeatBeforeGame(id);
-        } else {
-            return heartbeatInGame(id, heartbeatDto);
-        }
-    }
-
-    private HeartbeatDto heartbeatBeforeGame(Long id) {
-        for (Adventure adventure : PENDING_ADVENTURES) {
-            if (adventure.getId().equals(id)) {
-                adventure.getFirstUser().setHeartbeat(Instant.now());
-                break;
-            }
-        }
-        return new HeartbeatDto(id, null, null, GameStatus.SEARCHING, null);
-    }
-
-
-    private HeartbeatDto heartbeatInGame(Long id, HeartbeatDto heartbeatDto) {
+    public HeartbeatDto heartbeat(@PathVariable Long id, @RequestBody HeartbeatDto heartbeatDto) {
         for (Adventure adventure : PLAYING_ADVENTURES) {
             if (adventure.getId().equals(id)) {
                 switch (adventure.getGameStatus()) {
+                    case SEARCHING:
+                        return searching(heartbeatDto, adventure);
                     case PLAYING:
                         return playing(heartbeatDto, adventure);
                     case AFTER_GAME:
@@ -112,6 +96,13 @@ public class AdventureService {
             }
         }
         return new HeartbeatDto(id, null, null, GameStatus.ERROR, null);
+    }
+
+    private HeartbeatDto searching(HeartbeatDto heartbeatDto, Adventure adventure) {
+            adventure.getFirstUser().setHeartbeat(Instant.now());
+            adventure.getFirstUser().setLongitude(heartbeatDto.longitude);
+            adventure.getFirstUser().setLatitude(heartbeatDto.latitude);
+            return new HeartbeatDto(adventure.getId(), null, null, GameStatus.SEARCHING, adventure.getToken());
     }
 
     private HeartbeatDto playing(HeartbeatDto heartbeatDto, Adventure adventure) {
@@ -132,7 +123,7 @@ public class AdventureService {
     }
 
     @RequestMapping(method = RequestMethod.POST)
-    public HeartbeatDto findMeAdventureOnMyAss(HeartbeatDto heartbeatDto) {
+    public HeartbeatDto findMeAdventureOnMyAss(@RequestBody HeartbeatDto heartbeatDto) {
         final User currentUser = applicationContext.getCurrentUser();
         Adventure foundAdventure = null;
         for (Adventure adventure : PENDING_ADVENTURES) {
