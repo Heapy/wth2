@@ -4,6 +4,7 @@ import by.heap.entity.Adventure;
 import by.heap.entity.GameStatus;
 import by.heap.entity.User;
 import by.heap.repository.AdventureRepository;
+import by.heap.repository.user.UserRepository;
 import by.heap.security.HeapApplicationContext;
 import by.heap.service.dto.HeartbeatDto;
 import com.google.common.collect.Sets;
@@ -35,6 +36,9 @@ public class AdventureService {
 
     @Autowired
     private AdventureRepository adventureRepository;
+
+    @Autowired
+    private UserRepository userRepository;
 
     @Scheduled(fixedRate = 3000)
     public void checkForOutdatedUsers() {
@@ -73,6 +77,35 @@ public class AdventureService {
 
     private static boolean isUserExpired(User user, Integer seconds) {
         return user.getHeartbeat().getEpochSecond() + seconds < Instant.now().getEpochSecond();
+    }
+
+    @RequestMapping(value = "/{id}/token", method = RequestMethod.POST)
+    public TokenValidation token(@PathVariable Long id, @RequestBody HeartbeatDto heartbeatDto) {
+        for (Adventure adventure : ADVENTURES) {
+            if (id.equals(adventure.getId())) {
+                if (adventure.getToken().equals(heartbeatDto.token)) {
+                    adventure.setGameStatus(GameStatus.AFTER_GAME);
+                    User user = applicationContext.getCurrentUser();
+                    user.setKarma(user.getKarma() + 1);
+                    userRepository.save(user);
+                    return new TokenValidation(true);
+                }
+            }
+        }
+        return new TokenValidation(false);
+    }
+
+    public static class TokenValidation {
+
+        public TokenValidation() {
+        }
+
+        public TokenValidation(boolean status) {
+            this.status = status;
+        }
+
+        public boolean status;
+
     }
 
     @RequestMapping(value = "/{id}/heartbeat", method = RequestMethod.PUT)
