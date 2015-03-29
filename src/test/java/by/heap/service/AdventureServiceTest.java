@@ -52,9 +52,9 @@ public class AdventureServiceTest {
     @Test
     public void testIsUserExpired() throws Exception {
         User user = new User().setHeartbeat(Instant.now());
-        Method method = AdventureService.class.getDeclaredMethod("isUserExpired", User.class);
+        Method method = AdventureService.class.getDeclaredMethod("isUserExpired", User.class, Integer.class);
         method.setAccessible(true);
 
-        assertFalse((Boolean) ReflectionUtils.invokeMethod(method, null, user));
+        assertFalse((Boolean) ReflectionUtils.invokeMethod(method, null, user, 10));
     }
 }
