@@ -9,6 +9,7 @@ import by.heap.repository.user.UserRepository;
 import by.heap.security.HeapApplicationContext;
 import by.heap.service.dto.HeartbeatDto;
 import by.heap.service.dto.InterestDto;
+import by.heap.service.dto.StatusDto;
 import com.google.common.collect.Sets;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -84,7 +85,7 @@ public class AdventureService {
     }
 
     @RequestMapping(value = "/{id}/token", method = RequestMethod.POST)
-    public TokenValidation token(@PathVariable Long id, @RequestBody HeartbeatDto heartbeatDto) {
+    public StatusDto token(@PathVariable Long id, @RequestBody HeartbeatDto heartbeatDto) {
         for (Adventure adventure : ADVENTURES) {
             if (id.equals(adventure.getId())) {
                 if (adventure.getToken().equals(heartbeatDto.token)) {
@@ -92,76 +93,40 @@ public class AdventureService {
                     User user = applicationContext.getCurrentUser();
                     user.setKarma(user.getKarma() + 1);
                     userRepository.save(user);
-                    return new TokenValidation(true);
+                    return new StatusDto(true);
                 }
             }
         }
-        return new TokenValidation(false);
+        return new StatusDto(false);
     }
 
     @RequestMapping(value = "/{id}/interest", method = RequestMethod.POST)
-    public InterestValidation checkInterest(@PathVariable Long id, @RequestBody InterestDto interestDto) {
+    public StatusDto checkInterest(@PathVariable Long id, @RequestBody InterestDto interestDto) {
         Long currentUserId = applicationContext.getCurrentUserId();
         Interest suggestedInterest = new Interest(interestDto.getInterest());
-        for (Iterator<Adventure> iterator = ADVENTURES.iterator(); iterator.hasNext(); ) {
-            Adventure adventure = iterator.next();
+        for (Adventure adventure : ADVENTURES) {
             if (id.equals(adventure.getId())) {
                 if (adventure.getFirstUser().getId().equals(currentUserId)) {
-                    return validateInterest(adventure.getSecondUser(), suggestedInterest, adventure, iterator);
+                    return validateInterest(adventure.getSecondUser(), suggestedInterest, adventure);
                 } else {
-                    return validateInterest(adventure.getFirstUser(), suggestedInterest, adventure, iterator);
+                    return validateInterest(adventure.getFirstUser(), suggestedInterest, adventure);
                 }
             }
         }
-        return new InterestValidation(false);
+        return new StatusDto(false);
     }
 
-    private InterestValidation validateInterest(User anotherPlayer, Interest suggestedInterest, Adventure adventure, Iterator<Adventure> adventureIterator) {
+    private StatusDto validateInterest(User anotherPlayer, Interest suggestedInterest, Adventure adventure) {
         if (anotherPlayer.getInterests().contains(suggestedInterest)) {
             User user = applicationContext.getCurrentUser();
             user.setKarma(user.getKarma() + 5);
             userRepository.save(user);
-            finalizeOrRemoveAdventure(adventure, adventureIterator);
-            return new InterestValidation(true);
+            return new StatusDto(true);
         } else {
-            finalizeOrRemoveAdventure(adventure, adventureIterator);
-            return new InterestValidation(false);
+            return new StatusDto(false);
         }
     }
 
-    private void finalizeOrRemoveAdventure(Adventure adventure, Iterator<Adventure> adventureIterator) {
-        if (adventure.getGameStatus().equals(GameStatus.MADE_SUGGESTION)) {
-            adventureIterator.remove();
-        } else {
-            adventure.setGameStatus(GameStatus.MADE_SUGGESTION);
-        }
-    }
-
-    public static class TokenValidation {
-
-        public TokenValidation() {
-        }
-
-        public TokenValidation(boolean status) {
-            this.status = status;
-        }
-
-        public boolean status;
-
-    }
-
-    public static class InterestValidation {
-
-        public InterestValidation() {
-        }
-
-        public InterestValidation(boolean status) {
-            this.status = status;
-        }
-
-        public boolean status;
-
-    }
 
     @RequestMapping(value = "/{id}/heartbeat", method = RequestMethod.PUT)
     public HeartbeatDto heartbeat(@PathVariable Long id, @RequestBody HeartbeatDto heartbeatDto) {
