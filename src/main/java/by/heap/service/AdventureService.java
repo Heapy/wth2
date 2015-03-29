@@ -159,6 +159,7 @@ public class AdventureService {
                 .setGameStatus(GameStatus.SEARCHING)
                 .setToken(String.valueOf(new Random().ints(100000, 1000000).findAny().getAsInt()));
         adventure.getFirstUser().setHeartbeat(Instant.now());
+        ADVENTURES.add(adventure);
         adventureRepository.save(adventure);
         LOGGER.warn("Adventure '{}' is pending.", adventure);
         return adventure;
