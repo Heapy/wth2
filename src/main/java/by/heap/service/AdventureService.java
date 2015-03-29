@@ -142,6 +142,7 @@ public class AdventureService {
                     adventure.setSecondUser(currentUser);
                     currentUser.setHeartbeat(Instant.now());
                     PENDING_ADVENTURES.remove(adventure);
+                    LOGGER.warn("adventure '{}' started.", adventure.getId());
                     PLAYING_ADVENTURES.add(adventure);
                     foundAdventure = adventure;
                     break;
@@ -172,6 +173,7 @@ public class AdventureService {
                 .setToken(String.valueOf(new Random().ints(100000, 1000000).findAny().getAsInt()));
         adventure.getFirstUser().setHeartbeat(Instant.now());
         adventureRepository.save(adventure);
+        LOGGER.warn("adventure '{}' is pending.", adventure.getId());
         PENDING_ADVENTURES.add(adventure);
         return adventure;
     }
