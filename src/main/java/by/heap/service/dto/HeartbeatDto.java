@@ -24,6 +24,7 @@ public class HeartbeatDto {
     }
 
     public HeartbeatDto(Long id, String latitude, String longitude, GameStatus status, String token) {
+        this.id = id;
         this.latitude = latitude;
         this.longitude = longitude;
         this.status = status;
