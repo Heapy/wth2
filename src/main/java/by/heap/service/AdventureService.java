@@ -77,6 +77,9 @@ public class AdventureService {
 
     @RequestMapping(value = "/{id}/heartbeat", method = RequestMethod.PUT)
     public HeartbeatDto heartbeat(@PathVariable Long id, @RequestBody HeartbeatDto heartbeatDto) {
+
+        LOGGER.info("Heartbeat: id = {}, userId = {}, dto = {}.", id, heartbeatDto, applicationContext.getCurrentUserId());
+
         for (Adventure adventure : ADVENTURES) {
             if (adventure.getId().equals(id)) {
                 switch (adventure.getGameStatus()) {
@@ -86,6 +89,8 @@ public class AdventureService {
                         return playing(heartbeatDto, adventure);
                     case AFTER_GAME:
                         return new HeartbeatDto(id, null, null, GameStatus.AFTER_GAME, adventure.getToken());
+                    case EXPIRED:
+                        return new HeartbeatDto(id, null, null, GameStatus.EXPIRED, adventure.getToken());
                 }
             }
         }
