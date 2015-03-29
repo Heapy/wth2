@@ -107,16 +107,16 @@ public class AdventureService {
         for (Adventure adventure : ADVENTURES) {
             if (id.equals(adventure.getId())) {
                 if (adventure.getFirstUser().getId().equals(currentUserId)) {
-                    return validateInterest(adventure.getSecondUser(), suggestedInterest, adventure);
+                    return validateInterest(adventure.getSecondUser(), suggestedInterest);
                 } else {
-                    return validateInterest(adventure.getFirstUser(), suggestedInterest, adventure);
+                    return validateInterest(adventure.getFirstUser(), suggestedInterest);
                 }
             }
         }
         return new StatusDto(false);
     }
 
-    private StatusDto validateInterest(User anotherPlayer, Interest suggestedInterest, Adventure adventure) {
+    private StatusDto validateInterest(User anotherPlayer, Interest suggestedInterest) {
         if (anotherPlayer.getInterests().contains(suggestedInterest)) {
             User user = applicationContext.getCurrentUser();
             user.setKarma(user.getKarma() + 5);
