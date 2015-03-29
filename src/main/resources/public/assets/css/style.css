@@ -16,10 +16,17 @@ html, body {
     clear: both;
 }
 
+
 .page {
     font-family: 'Play', sans-serif;
     padding-top: 100px;
 }
+
+.land{
+    width: 75%;
+    margin: 0 auto;
+}
+
 /*---HEADER-BEGIN--*/
 
 header {
@@ -52,9 +59,8 @@ header a {
     transition: all 0.5s;
 }
 
-
 .home-link {
-text-decoration: none;
+    text-decoration: none;
 }
 
 .menu {
@@ -79,7 +85,7 @@ text-decoration: none;
     align-self: center;
 }
 
-.menu li a{
+.menu li a {
     text-decoration: none;
 }
 
@@ -87,9 +93,8 @@ text-decoration: none;
     background-color: rgba(0, 0, 0, 0.04);
 }
 
-.top-players{
+.top-players {
     background-color: white;
-    width: 80%;
     margin: 50px auto;
     border-radius: 3px;
     padding-top: 50px;
@@ -120,13 +125,14 @@ text-decoration: none;
 
 .player-image img {
     border-radius: 50px;
+    width: 100px;
+    height: 100px;
 }
 
-
-.map{
-    width: 90%;
+.map {
     margin: 30px auto;
 }
+
 .map div {
     height: 100%;
 }
@@ -134,6 +140,72 @@ text-decoration: none;
 .top-players-message {
     text-align: center;
     font-size: 2em;
+}
+
+
+.profile-view {
+    background-color: white;
+    box-shadow: #000000 0 0 89px 27px;
+    height: 100%;
+    margin: 0 auto;
+}
+
+.profile-avatar {
+    text-align: center;
+}
+
+.profile-karma{
+    text-align: center;
+    margin-top: 5px;
+    font-size: 16px;
+    color: rgb(107, 107, 107);
+}
+
+
+.profile-avatar img {
+    margin: 30px;
+    width: 200px;
+    height: 200px;
+    border-radius: 100px;
+}
+
+.profile-displayName {
+    font-size: 32px;
+    text-align: center;
+}
+
+.profile-username {
+    font-size: 20px;
+    text-align: center;
+}
+
+.profile-view-interests{
+    float: right;
+    margin: 34px 350px 50px 50px;
+}
+
+.profile-edit {
+    margin: 50px;
+}
+
+.profile-edit input {
+    display: block;
+    width: 300px;
+    margin-top: 10px;
+    border: 0;
+    border-bottom: 1px solid rgba(0, 0, 0, .2);
+    height: 30px;
+    line-height: 30px;
+    color: rgba(0, 30, 74, 0.84);
+}
+
+.profile-edit input:focus {
+    outline: none;
+    border-color: #53CACE;
+}
+
+.profile-edit button {
+    margin-top: 10px;
 }
 
 footer {

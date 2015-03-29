@@ -3,16 +3,97 @@
  */
 "use strict";
 
-var baseUrl = "http://private-anon-2879e03fd-heap.apiary-mock.com";
+var baseUrl = "http://heap.by";
 
 $(function () {
 
     uiFeatures.init();
     mapHome.init();
     playersHome.showTopNine();
-
-
 });
+
+var authHome = (function () {
+
+    var $this = {};
+    $this.token = {};
+    $this.currentUser = {
+        id: 1,
+        avatar: "http://heap.by/assets/avatars/6.jpg",
+        username: "Kulebyaka@email.com",
+        karma: 9,
+        displayName: "Odin Rom"
+    };
+
+    $this.register = function () {
+        $.ajax({
+            url: baseUrl + '/auth/register',
+            contentType: 'application/json; charset=UTF-8',
+            method: 'post',
+            data: JSON.stringify({
+                username: $("#username").val(),
+                password: $("#password").val(),
+                displayName: $("#displayName").val()
+            })
+        }).done(function (data) {
+            $this.token = JSON.parse(data).token;
+        });
+        return false;
+    };
+
+    $this.login = function () {
+        succesLogin({});
+        //$.ajax({
+        //    url: baseUrl + '/auth/login',
+        //    contentType: 'application/json; charset=UTF-8',
+        //    method: 'post',
+        //    data: JSON.stringify({
+        //        username: $("#login-username").val(),
+        //        password: $("#login-password").val()
+        //    })
+        //}).done(function (data) {
+        //    $this.token = JSON.parse(data).token;
+        //    $.ajax({
+        //        headers: $this.token,
+        //        method: 'get',
+        //        url: baseUrl + '/user'
+        //    }).done(succesLogin);
+        //})
+    };
+
+    function succesLogin(data){
+        $("#logout-button").show();
+        showProfile(data);
+    }
+
+    function showProfile(data) {
+        var user = $this.currentUser;
+        $("#auth").hide();
+        $("#profile-view").show();
+        $(".profile-avatar img").attr("src", user.avatar);
+        $(".profile-username span").html(user.username);
+        $(".profile-displayName span").html(user.displayName);
+        $(".profile-karma span").html(user.karma+'Points');
+        if ($this.currentUser.id === user.id) {
+            $(".profile-edit").show();
+            $("#edit-username").val(user.username);
+            $("#edit-displayName").val(user.displayName);
+        } else {
+            $(".profile-edit").hide();
+        }
+    }
+
+    $this.logout = function () {
+        $("#logout-button").hide();
+        $("#profile-view").hide();
+        $("#auth").show();
+        //$this.currentUser = {};
+        //$this.token = {};
+        return false;
+    };
+
+    return $this;
+
+}());
 
 
 var playersHome = (function () {
@@ -22,8 +103,10 @@ var playersHome = (function () {
     $this.showTopNine = function () {
         getData(baseUrl + '/users/top', 'get', {}, function (topPlayers) {
             var template = $('#player-short-template').html();
-            var html = Mustache.to_html(template, topPlayers);
+
+            var html = Mustache.to_html(template, {users: topPlayers});
             $('#players').html(html);
+            uiFeatures.correctSectionHeight();
         })
     };
 
@@ -47,13 +130,13 @@ var mapHome = (function () {
             $this.map.behaviors.disable(['drag', 'rightMouseButtonMagnifier', 'scrollZoom']);
 
             var userBalloonLayout = ymaps.templateLayoutFactory.createClass(
-                '<img style="border-radius:50px" src="{{properties.avatar}}">' +
+                '<img style="border-radius:50px; width: 80px; height: 80px;" src="{{properties.avatar}}">' +
                 '<div style="width:90px;height: 90px;border-radius: 50px; background: white; z-index: -5; position: relative; top: -85px; left: -5px"></div>' +
                 '<span style="background-color: white;font-size: 16px;box-shadow: -1px -1px 15px 0px rgba(50, 50, 50, 0.75); display:inline-block; text-align:center; padding: 5px 7px; width:90px; position: relative; top: -75px; left: -10px">{{properties.displayName}}</span>'
             );
 
             getData(baseUrl + '/users/location', 'get', {}, function (data) {
-                var users = data.users;
+                var users = data;
                 for (var i = 0; i < users.length; i++) {
                     $this.map.geoObjects.add(new ymaps.Placemark([users[i].latitude, users[i].longitude], {
                         avatar: users[i].avatar,
@@ -91,6 +174,7 @@ var uiFeatures = (function () {
         var headerHeight = document.getElementsByTagName("header")[0].offsetHeight;
         var sections = document.getElementsByClassName("land");
         for (var i = 0; i < sections.length; i++) {
+            sections[i].style.height = 'inherit';
             if (sections[i].offsetHeight < window.innerHeight - headerHeight - 50) {
                 sections[i].style.height = window.innerHeight - headerHeight - 50 + 'px';
             }

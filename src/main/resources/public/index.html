@@ -22,21 +22,55 @@
 <body>
 <script src="http://mymaplist.com/js/vendor/TweenLite.min.js"></script>
 <header>
-    <a class="home-link" href="#profile">HEAP</a>
+    <a class="home-link" href="#profile" onclick="scrollTo('profile', 100)">HEAP</a>
     <nav class="menu sticky-nav">
         <ul>
-            <li onclick="scrollTo('profile', 100)" ><a class="menu-link" href="#profile" >Profile</a></li>
-            <li onclick="scrollTo('top', 100)" ><a class="menu-link" href="#top" >Top Players</a></li>
-            <li onclick="scrollTo('map',1)" ><a class="menu-link" href="#map">Map</a></li>
+            <li onclick="scrollTo('about',100)"><a class="menu-link" href="#about">About</a></li>
+            <li onclick="scrollTo('profile', 100)"><a class="menu-link" href="#profile">Profile</a></li>
+            <li onclick="scrollTo('top', 100)"><a class="menu-link" href="#top">Top Players</a></li>
+            <li onclick="scrollTo('map',1)"><a class="menu-link" href="#map">Map</a></li>
+            <li id="logout-button" onclick="authHome.logout();" style="display: none"><a class="menu-link" href="#logout" >Logout</a></li>
         </ul>
     </nav>
 </header>
 <div class="page">
 
+    <!--<section class="user-info land" id="about">-->
+    <!--</section>-->
     <section class="user-info land" id="profile">
-        <div class="container">
-            <div id="signupbox" style="display:block; margin-top:50px"
-                 class="mainbox col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2">
+        <div id="profile-view" class="profile-view" style="display: none">
+            <div class="profile-view-main">
+                <div class="profile-avatar">
+                    <img src="assets/img/ico.png">
+                </div>
+                <div class="profile-displayName">
+                    <span>Kakashka</span>
+                </div>
+                <div class="profile-username">
+                    <span>Kakashka@Email</span>
+                </div>
+                <div class="profile-karma">
+                    <span>0 Points</span>
+                </div>
+            </div>
+            <div class="profile-view-interests">
+                <h4>Interests:</h4>
+                <a href="#">#cool</a>
+                <a href="#">#beer</a>
+                <a href="#">#girls</a>
+                <a href="#">#fat</a>
+                <a href="#">#kulio</a>
+            </div>
+            <div class="profile-edit" style="display: none">
+                <h4>Edit</h4>
+                <input id="edit-username" value="Kakashka">
+                <input id="edit-displayName" value="Kakashka@Email">
+                <button class="btn btn-info">Save Changes</button>
+            </div>
+        </div>
+        <div class="container" style="display: block" id="auth">
+            <div id="signupbox" style="display:none; margin-top:50px"
+                 class="mainbox col-md-6 col-sm-8 col-sm-offset-2">
                 <div class="panel panel-info">
                     <div class="panel-heading">
                         <div class="panel-title">Sign Up</div>
@@ -46,27 +80,27 @@
                             In</a></div>
                     </div>
                     <div class="panel-body">
-                        <form id="signupform" class="form-horizontal" role="form">
+                        <form id="signupform" class="form-horizontal" role="form" method="post"
+                              action="http://heap.by/auth/register">
 
                             <div id="signupalert" style="display:none" class="alert alert-danger">
                                 <p>Error:</p>
                                 <span></span>
                             </div>
                             <div class="form-group">
-                                <label for="email" class="col-md-3 control-label">Email</label>
+                                <label for="username" class="col-md-3 control-label">Email</label>
 
                                 <div class="col-md-9">
-                                    <input type="text" class="form-control" id="email" name="email"
+                                    <input type="text" class="form-control" id="username" name="username"
                                            placeholder="Email Address">
                                 </div>
                             </div>
 
                             <div class="form-group">
-                                <label for="firstname" class="col-md-3 control-label">First Name</label>
-
+                                <label for="displayName" class="col-md-3 control-label">Display Name</label>
                                 <div class="col-md-9">
-                                    <input type="text" class="form-control" id="firstname" name="firstname"
-                                           placeholder="First Name">
+                                    <input type="text" class="form-control" id="displayName" name="displayName"
+                                           placeholder="Display Name">
                                 </div>
                             </div>
 
@@ -74,42 +108,32 @@
                                 <label for="password" class="col-md-3 control-label">Password</label>
 
                                 <div class="col-md-9">
-                                    <input type="password" class="form-control" id="password" name="passwd"
+                                    <input type="password" class="form-control" id="password" name="password"
                                            placeholder="Password">
                                 </div>
                             </div>
 
                             <div class="form-group">
                                 <!-- Button -->
-                                <div class="col-md-offset-3 col-md-9">
-                                    <button id="btn-signup" type="button" class="btn btn-info"><i
+                                <div style="width: 70px; margin: 0 auto;">
+                                    <button style="text-align: center" id="btn-signup" type="button"
+                                            onclick="return authHome.register()" class="btn btn-info"><i
                                             class="icon-hand-right"></i> &nbsp Sign Up
                                     </button>
-                                    <span style="margin-left:8px;">or</span>
                                 </div>
                             </div>
-
-                            <div style="border-top: 1px solid #999; padding-top:20px" class="form-group">
-
-                                <div class="col-md-offset-3 col-md-9">
-                                    <button id="btn-fbsignup" type="button" class="btn btn-primary"><i
-                                            class="icon-facebook"></i> Sign Up with Facebook
-                                    </button>
-                                </div>
-
-                            </div>
-
                         </form>
                     </div>
                 </div>
             </div>
 
-            <div id="loginbox" style="margin-top:50px; display: none"
-                 class="mainbox col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2">
+            <div id="loginbox" style="margin-top:50px; "
+                 class="mainbox col-md-6 col-sm-8 col-sm-offset-2">
                 <div class="panel panel-info">
                     <div class="panel-heading">
                         <div class="panel-title">Sign In</div>
-                        <div style="float:right; font-size: 80%; position: relative; top:-10px"><a href="#">Forgot
+                        <div style="float:right; font-size: 80%; position: relative; top:-10px"><a
+                                onclick="alert('LOH')" href="#">Forgot
                             password?</a></div>
                     </div>
 
@@ -121,7 +145,8 @@
 
                             <div style="margin-bottom: 25px" class="input-group">
                                 <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
-                                <input id="login-username" type="text" class="form-control" name="username" value=""
+                                <input id="login-username" type="text" class="form-control" name="login-username"
+                                       value=""
                                        placeholder="username or email">
                             </div>
 
@@ -131,24 +156,12 @@
                                        placeholder="password">
                             </div>
 
-
-                            <div class="input-group">
-                                <div class="checkbox">
-                                    <label>
-                                        <input id="login-remember" type="checkbox" name="remember" value="1"> Remember
-                                        me
-                                    </label>
-                                </div>
-                            </div>
-
-
                             <div style="margin-top:10px" class="form-group">
                                 <!-- Button -->
 
-                                <div class="col-sm-12 controls">
-                                    <a id="btn-login" href="#" class="btn btn-success">Login </a>
-                                    <a id="btn-fblogin" href="#" class="btn btn-primary">Login with Facebook</a>
-
+                                <div style="width: 70px; margin: 0 auto;">
+                                    <a id="btn-login" href="#" onclick="return authHome.login();"
+                                       class="btn btn-success">Login </a>
                                 </div>
                             </div>
 
