@@ -4,6 +4,7 @@ import by.heap.entity.view.UserJsonView;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonView;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
@@ -31,7 +32,7 @@ public class User extends AbstractEntity {
     @Column(nullable = false)
     private String secret = UUID.randomUUID().toString();
 
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL)
     private Set<Interest> interests = new HashSet<>();
 
     @Column

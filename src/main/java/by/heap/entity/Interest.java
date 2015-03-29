@@ -14,7 +14,7 @@ public class Interest extends AbstractEntity {
         this.name = name;
     }
 
-    @Column(unique = true, nullable = false)
+    @Column(nullable = false)
     private String name;
 
     public String getName() {
