@@ -6,6 +6,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class HeartbeatDto {
 
     @JsonProperty
+    public Long id;
+
+    @JsonProperty
     public String latitude;
 
     @JsonProperty
@@ -20,7 +23,7 @@ public class HeartbeatDto {
     public HeartbeatDto() {
     }
 
-    public HeartbeatDto(String latitude, String longitude, GameStatus status, String token) {
+    public HeartbeatDto(Long id, String latitude, String longitude, GameStatus status, String token) {
         this.latitude = latitude;
         this.longitude = longitude;
         this.status = status;
