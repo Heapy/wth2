@@ -78,7 +78,7 @@ public class AdventureService {
     @RequestMapping(value = "/{id}/heartbeat", method = RequestMethod.PUT)
     public HeartbeatDto heartbeat(@PathVariable Long id, @RequestBody HeartbeatDto heartbeatDto) {
 
-        LOGGER.info("Heartbeat: id = {}, userId = {}, dto = {}.", id, heartbeatDto, applicationContext.getCurrentUserId());
+        LOGGER.info("Heartbeat: user = {}, id = {}, dto = {}.", applicationContext.getCurrentUser().getUsername(), id, heartbeatDto);
 
         for (Adventure adventure : ADVENTURES) {
             if (adventure.getId().equals(id)) {
