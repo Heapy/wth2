@@ -7,6 +7,7 @@ import com.fasterxml.jackson.annotation.JsonView;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
 import java.time.Instant;
 import java.util.HashSet;
@@ -32,7 +33,7 @@ public class User extends AbstractEntity {
     @Column(nullable = false)
     private String secret = UUID.randomUUID().toString();
 
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Set<Interest> interests = new HashSet<>();
 
     @Column
