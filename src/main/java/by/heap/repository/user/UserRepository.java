@@ -12,6 +12,6 @@ public interface UserRepository extends AbstractRepository<User> {
 
     User getUserByUsername(String username);
 
-    @Query("from User u order by u.karma")
+    @Query("from User u order by u.karma desc")
     List<User> findTopByKarma(Pageable pageable);
 }

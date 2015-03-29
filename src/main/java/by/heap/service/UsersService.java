@@ -24,7 +24,7 @@ public class UsersService {
     @RequestMapping(value = "top", method = RequestMethod.GET)
     @JsonView(UserJsonView.Top.class)
     public List<User> topUsers() {
-        return userRepository.findTopByKarma(Pageable.SEVEN);
+        return userRepository.findTopByKarma(Pageable.SIX);
     }
 
     @RequestMapping(value = "location", method = RequestMethod.GET)
