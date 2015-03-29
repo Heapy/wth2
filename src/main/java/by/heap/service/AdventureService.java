@@ -103,10 +103,9 @@ public class AdventureService {
     private HeartbeatDto heartbeatInGame(Long id, HeartbeatDto heartbeatDto) {
         for (Adventure adventure : PLAYING_ADVENTURES) {
             if (adventure.getId().equals(id)) {
-                Long currentUserId = applicationContext.getCurrentUserId();
                 switch (adventure.getGameStatus()) {
                     case PLAYING:
-                        return playing(heartbeatDto, adventure, currentUserId);
+                        return playing(heartbeatDto, adventure);
                     case AFTER_GAME:
                         return new HeartbeatDto(id, null, null, GameStatus.AFTER_GAME, adventure.getToken());
                 }
@@ -115,7 +114,9 @@ public class AdventureService {
         return new HeartbeatDto(id, null, null, GameStatus.ERROR, null);
     }
 
-    private HeartbeatDto playing(HeartbeatDto heartbeatDto, Adventure adventure, Long currentUserId) {
+    private HeartbeatDto playing(HeartbeatDto heartbeatDto, Adventure adventure) {
+        Long currentUserId = applicationContext.getCurrentUserId();
+
         if (adventure.getFirstUser().getId().equals(currentUserId)) {
             adventure.getFirstUser().setLongitude(heartbeatDto.longitude).setLatitude(heartbeatDto.latitude);
             return new HeartbeatDto(adventure.getId(), adventure.getSecondUser().getLatitude(), adventure.getSecondUser()
@@ -139,6 +140,7 @@ public class AdventureService {
             if (hasSameInterests(currentUser, userToCompare)) {
                 if (adventure.getStatus().compareAndSet(false, true)) {
                     adventure.setSecondUser(currentUser);
+                    currentUser.setHeartbeat(Instant.now());
                     PENDING_ADVENTURES.remove(adventure);
                     PLAYING_ADVENTURES.add(adventure);
                     foundAdventure = adventure;

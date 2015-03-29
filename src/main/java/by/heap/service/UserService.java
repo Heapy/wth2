@@ -39,9 +39,9 @@ public class UserService {
         return userRepository.findOne(id);
     }
 
-    @RequestMapping(value = "/{id}/interests", method = RequestMethod.GET)
-    public Set<Interest> getInterests(@PathVariable Long id) {
-        return userRepository.findOne(id).getInterests();
+    @RequestMapping(value = "/interests", method = RequestMethod.GET)
+    public Set<Interest> getInterests() {
+        return userRepository.findOne(applicationContext.getCurrentUserId()).getInterests();
     }
 
     @RequestMapping(method = RequestMethod.POST)
