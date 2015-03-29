@@ -56,6 +56,8 @@ public class AdventureService {
     @Scheduled(fixedRate = 30000)
     public void checkForOutdatedUsersInGame() {
         for (Adventure adventure : ADVENTURES) {
+            userRepository.save(adventure.getFirstUser());
+            userRepository.save(adventure.getSecondUser());
             // If Adventure has expired user and status of adventure is true (started)
             if (GameStatus.PLAYING.equals(adventure.getGameStatus()) && isFirstUserExpired(adventure, 60)) {
                 LOGGER.info("Adventure with id = '{}' have expired first user with username = '{}'.", adventure.getId(), adventure.getFirstUser().getUsername());
