@@ -7,5 +7,6 @@ public enum GameStatus {
     SEARCHING,
     PLAYING,
     AFTER_GAME,
-    ERROR
+    ERROR,
+    EXPIRED
 }

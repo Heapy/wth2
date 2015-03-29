@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -27,9 +28,7 @@ public class AdventureService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AdventureService.class);
 
-    private static final Set<Adventure> PENDING_ADVENTURES = Sets.newConcurrentHashSet();
-
-    private static final Set<Adventure> PLAYING_ADVENTURES = Sets.newConcurrentHashSet();
+    private static final Set<Adventure> ADVENTURES = Sets.newConcurrentHashSet();
 
     @Autowired
     private HeapApplicationContext applicationContext;
@@ -39,33 +38,29 @@ public class AdventureService {
 
     @Scheduled(fixedRate = 3000)
     public void checkForOutdatedUsers() {
-        List<Adventure> adventuresToDelete = new ArrayList<>();
-        for (Adventure adventure : PENDING_ADVENTURES) {
+        for (Adventure adventure : ADVENTURES) {
             // If Adventure has expired user and status of adventure is false (not started)
-            if (!adventure.getStatus().get() && isFirstUserExpired(adventure)) {
-                LOGGER.info("Adventure with id = '{}' have expired first user.", adventure.getId());
-                adventuresToDelete.add(adventure);
-            } else if (!adventure.getStatus().get()) {
-                LOGGER.info("Adventure with id = '{}' have non expired first user.", adventure.getId());
+            if (GameStatus.SEARCHING.equals(adventure.getGameStatus()) && isFirstUserExpired(adventure)) {
+                LOGGER.info("Adventure with id = '{}' have expired first user with username = '{}'.", adventure.getId(), adventure.getFirstUser().getUsername());
+                adventure.setGameStatus(GameStatus.EXPIRED);
+            } else if (GameStatus.SEARCHING.equals(adventure.getGameStatus())) {
+                LOGGER.info("Adventure with id = '{}' have non expired first user with username = '{}'.", adventure.getId(), adventure.getFirstUser().getUsername());
             }
         }
-        PENDING_ADVENTURES.removeAll(adventuresToDelete);
     }
 
     @Scheduled(fixedRate = 30000)
     public void checkForOutdatedUsersInGame() {
-        List<Adventure> adventuresToDelete = new ArrayList<>();
-        for (Adventure adventure : PLAYING_ADVENTURES) {
+        for (Adventure adventure : ADVENTURES) {
             // If Adventure has expired user and status of adventure is true (started)
-            if (adventure.getStatus().get() && isFirstUserExpired(adventure)) {
-                LOGGER.info("Adventure with id = '{}' have expired first user.", adventure.getId());
-                adventuresToDelete.add(adventure);
-            } else if (adventure.getStatus().get() && isSecondUserExpired(adventure)) {
-                LOGGER.info("Adventure with id = '{}' have expired second user.", adventure.getId());
-                adventuresToDelete.add(adventure);
+            if (GameStatus.PLAYING.equals(adventure.getGameStatus()) && isFirstUserExpired(adventure)) {
+                LOGGER.info("Adventure with id = '{}' have expired first user with username = '{}'.", adventure.getId(), adventure.getFirstUser().getUsername());
+                adventure.setGameStatus(GameStatus.EXPIRED);
+            } else if (GameStatus.PLAYING.equals(adventure.getGameStatus()) && isSecondUserExpired(adventure)) {
+                LOGGER.info("Adventure with id = '{}' have expired second user with username = '{}'.", adventure.getId(), adventure.getSecondUser().getUsername());
+                adventure.setGameStatus(GameStatus.EXPIRED);
             }
         }
-        PLAYING_ADVENTURES.removeAll(adventuresToDelete);
     }
 
     private static boolean isFirstUserExpired(Adventure adventure) {
@@ -80,30 +75,13 @@ public class AdventureService {
         return user.getHeartbeat().getEpochSecond() + 15 < Instant.now().getEpochSecond();
     }
 
-    @RequestMapping(value = "/{id}/heartbeat", method = RequestMethod.PUT, consumes = "application/json")
-    public HeartbeatDto heartbeat(@PathVariable Long id, HeartbeatDto heartbeatDto) {
-        if (Objects.isNull(heartbeatDto.latitude) || Objects.isNull(heartbeatDto.longitude)) {
-            return heartbeatBeforeGame(id);
-        } else {
-            return heartbeatInGame(id, heartbeatDto);
-        }
-    }
-
-    private HeartbeatDto heartbeatBeforeGame(Long id) {
-        for (Adventure adventure : PENDING_ADVENTURES) {
-            if (adventure.getId().equals(id)) {
-                adventure.getFirstUser().setHeartbeat(Instant.now());
-                break;
-            }
-        }
-        return new HeartbeatDto(id, null, null, GameStatus.SEARCHING, null);
-    }
-
-
-    private HeartbeatDto heartbeatInGame(Long id, HeartbeatDto heartbeatDto) {
-        for (Adventure adventure : PLAYING_ADVENTURES) {
+    @RequestMapping(value = "/{id}/heartbeat", method = RequestMethod.PUT)
+    public HeartbeatDto heartbeat(@PathVariable Long id, @RequestBody HeartbeatDto heartbeatDto) {
+        for (Adventure adventure : ADVENTURES) {
             if (adventure.getId().equals(id)) {
                 switch (adventure.getGameStatus()) {
+                    case SEARCHING:
+                        return searching(heartbeatDto, adventure);
                     case PLAYING:
                         return playing(heartbeatDto, adventure);
                     case AFTER_GAME:
@@ -111,39 +89,48 @@ public class AdventureService {
                 }
             }
         }
-        return new HeartbeatDto(id, null, null, GameStatus.ERROR, null);
+        return new HeartbeatDto(id, null, null, GameStatus.ERROR, "Error in heartbeat(). No adventure find in pending adventures.");
+    }
+
+    private HeartbeatDto searching(HeartbeatDto heartbeatDto, Adventure adventure) {
+            adventure.getFirstUser().setHeartbeat(Instant.now());
+            adventure.getFirstUser().setLongitude(heartbeatDto.longitude);
+            adventure.getFirstUser().setLatitude(heartbeatDto.latitude);
+            return new HeartbeatDto(adventure.getId(), null, null, GameStatus.SEARCHING, adventure.getToken());
     }
 
     private HeartbeatDto playing(HeartbeatDto heartbeatDto, Adventure adventure) {
         Long currentUserId = applicationContext.getCurrentUserId();
 
         if (adventure.getFirstUser().getId().equals(currentUserId)) {
+            adventure.getFirstUser().setHeartbeat(Instant.now());
             adventure.getFirstUser().setLongitude(heartbeatDto.longitude).setLatitude(heartbeatDto.latitude);
             return new HeartbeatDto(adventure.getId(), adventure.getSecondUser().getLatitude(), adventure.getSecondUser()
                 .getLongitude(), GameStatus.PLAYING, adventure.getToken());
         } else if (adventure.getSecondUser().getId().equals(currentUserId)) {
+            adventure.getSecondUser().setHeartbeat(Instant.now());
             adventure.getSecondUser().setLongitude(heartbeatDto.longitude).setLatitude(heartbeatDto.latitude);
             return new HeartbeatDto(adventure.getId(), adventure.getFirstUser().getLatitude(), adventure.getFirstUser()
                 .getLongitude(), GameStatus.PLAYING, adventure.getToken());
         } else {
             LOGGER.error("Приплыли");
-            return new HeartbeatDto(adventure.getId(), null, null, GameStatus.ERROR, null);
+            return new HeartbeatDto(adventure.getId(), null, null, GameStatus.ERROR, "Error in playing()");
         }
     }
 
     @RequestMapping(method = RequestMethod.POST)
-    public HeartbeatDto findMeAdventureOnMyAss(HeartbeatDto heartbeatDto) {
+    public HeartbeatDto findMeAdventureOnMyAss(@RequestBody HeartbeatDto heartbeatDto) {
         final User currentUser = applicationContext.getCurrentUser();
         Adventure foundAdventure = null;
-        for (Adventure adventure : PENDING_ADVENTURES) {
+        for (Adventure adventure : ADVENTURES) {
             User userToCompare = adventure.getFirstUser();
+            LOGGER.info("Test if have same interest firstUser = '{}', secondUser = '{}'", userToCompare, currentUser);
             if (hasSameInterests(currentUser, userToCompare)) {
                 if (adventure.getStatus().compareAndSet(false, true)) {
                     adventure.setSecondUser(currentUser);
-                    currentUser.setHeartbeat(Instant.now());
-                    PENDING_ADVENTURES.remove(adventure);
-                    LOGGER.warn("adventure '{}' started. user  '{}", adventure.getId(), currentUser.getDisplayName());
-                    PLAYING_ADVENTURES.add(adventure);
+                    adventure.setGameStatus(GameStatus.PLAYING);
+                    currentUser.setHeartbeat(Instant.now()).setLatitude(heartbeatDto.latitude).setLongitude(heartbeatDto.longitude);
+                    LOGGER.warn("Adventure '{}' started.", adventure);
                     foundAdventure = adventure;
                     break;
                 }
@@ -173,8 +160,7 @@ public class AdventureService {
                 .setToken(String.valueOf(new Random().ints(100000, 1000000).findAny().getAsInt()));
         adventure.getFirstUser().setHeartbeat(Instant.now());
         adventureRepository.save(adventure);
-        LOGGER.warn("adventure '{}' is pending. user  '{}", adventure.getId(), user.getDisplayName());
-        PENDING_ADVENTURES.add(adventure);
+        LOGGER.warn("Adventure '{}' is pending.", adventure);
         return adventure;
     }
 }
