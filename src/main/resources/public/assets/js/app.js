@@ -60,7 +60,7 @@ var authHome = (function () {
         //})
     };
 
-    function succesLogin(data){
+    function succesLogin(data) {
         $("#logout-button").show();
         showProfile(data);
     }
@@ -72,7 +72,7 @@ var authHome = (function () {
         $(".profile-avatar img").attr("src", user.avatar);
         $(".profile-username span").html(user.username);
         $(".profile-displayName span").html(user.displayName);
-        $(".profile-karma span").html(user.karma+'Points');
+        $(".profile-karma span").html(user.karma + 'Points');
         if ($this.currentUser.id === user.id) {
             $(".profile-edit").show();
             $("#edit-username").val(user.username);
@@ -121,6 +121,7 @@ var mapHome = (function () {
     $this.map = {};
     $this.points = {};
     $this.template = '';
+    $this.showingUsers = {};
 
     $this.init = function () {
         ymaps.ready(function () {
@@ -150,26 +151,43 @@ var mapHome = (function () {
 
         });
 
-        $this.update = function(){
+        $this.update = function () {
             getData(baseUrl + '/users/location', 'get', {}, function (data) {
-                $this.points.removeAll();
                 var users = data;
                 for (var i = 0; i < users.length; i++) {
-                    $this.points.add(new ymaps.Placemark([users[i].latitude, users[i].longitude], {
-                        avatar: users[i].avatar,
-                        displayName: users[i].displayName
-                    }, {
-                        hintLayout: $this.template,
-                        iconLayout: 'default#image',
-                        iconImageHref: "assets/img/ico.png",
-                        iconImageSize: [40, 40]
-                    }));
+                    var oldUser = $this.showingUsers[users[i].id];
+                    if (oldUser && oldUser.latitude === users[i].latitude && oldUser.longitude === users[i].longitude) {
+                        continue;
+                    }
+                    var newPoint = getPoint(users[i]);
+                    if(oldUser){
+                        $this.points.remove(oldUser.point);
+                    } else {
+                        $this.showingUsers[users[i].id] = users[i];
+                        oldUser = $this.showingUsers[users[i].id];
+
+                    }
+                    oldUser.point = newPoint;
+                    oldUser.latitude = users[i].latitude;
+                    oldUser.longitude = users[i].longitude;
+                    $this.points.add(newPoint)
                 }
-                $this.map.geo
             })
         }
 
     };
+
+    function getPoint(user) {
+        return new ymaps.Placemark([user.latitude, user.longitude], {
+            avatar: user.avatar,
+            displayName: user.displayName
+        }, {
+            hintLayout: $this.template,
+            iconLayout: 'default#image',
+            iconImageHref: "assets/img/ico.png",
+            iconImageSize: [40, 40]
+        });
+    }
 
 
     return $this;
