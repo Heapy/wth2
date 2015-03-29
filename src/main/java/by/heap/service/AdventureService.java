@@ -40,7 +40,7 @@ public class AdventureService {
     public void checkForOutdatedUsers() {
         for (Adventure adventure : ADVENTURES) {
             // If Adventure has expired user and status of adventure is false (not started)
-            if (GameStatus.SEARCHING.equals(adventure.getGameStatus()) && isFirstUserExpired(adventure)) {
+            if (GameStatus.SEARCHING.equals(adventure.getGameStatus()) && isFirstUserExpired(adventure, 60)) {
                 LOGGER.info("Adventure with id = '{}' have expired first user with username = '{}'.", adventure.getId(), adventure.getFirstUser().getUsername());
                 adventure.setGameStatus(GameStatus.EXPIRED);
             } else if (GameStatus.SEARCHING.equals(adventure.getGameStatus())) {
@@ -53,26 +53,26 @@ public class AdventureService {
     public void checkForOutdatedUsersInGame() {
         for (Adventure adventure : ADVENTURES) {
             // If Adventure has expired user and status of adventure is true (started)
-            if (GameStatus.PLAYING.equals(adventure.getGameStatus()) && isFirstUserExpired(adventure)) {
+            if (GameStatus.PLAYING.equals(adventure.getGameStatus()) && isFirstUserExpired(adventure, 60)) {
                 LOGGER.info("Adventure with id = '{}' have expired first user with username = '{}'.", adventure.getId(), adventure.getFirstUser().getUsername());
                 adventure.setGameStatus(GameStatus.EXPIRED);
-            } else if (GameStatus.PLAYING.equals(adventure.getGameStatus()) && isSecondUserExpired(adventure)) {
+            } else if (GameStatus.PLAYING.equals(adventure.getGameStatus()) && isSecondUserExpired(adventure, 60)) {
                 LOGGER.info("Adventure with id = '{}' have expired second user with username = '{}'.", adventure.getId(), adventure.getSecondUser().getUsername());
                 adventure.setGameStatus(GameStatus.EXPIRED);
             }
         }
     }
 
-    private static boolean isFirstUserExpired(Adventure adventure) {
-        return isUserExpired(adventure.getFirstUser());
+    private static boolean isFirstUserExpired(Adventure adventure, Integer seconds) {
+        return isUserExpired(adventure.getFirstUser(), seconds);
     }
 
-    private static boolean isSecondUserExpired(Adventure adventure) {
-        return isUserExpired(adventure.getSecondUser());
+    private static boolean isSecondUserExpired(Adventure adventure, Integer seconds) {
+        return isUserExpired(adventure.getSecondUser(), seconds);
     }
 
-    private static boolean isUserExpired(User user) {
-        return user.getHeartbeat().getEpochSecond() + 15 < Instant.now().getEpochSecond();
+    private static boolean isUserExpired(User user, Integer seconds) {
+        return user.getHeartbeat().getEpochSecond() + seconds < Instant.now().getEpochSecond();
     }
 
     @RequestMapping(value = "/{id}/heartbeat", method = RequestMethod.PUT)
@@ -108,13 +108,11 @@ public class AdventureService {
         Long currentUserId = applicationContext.getCurrentUserId();
 
         if (adventure.getFirstUser().getId().equals(currentUserId)) {
-            adventure.getFirstUser().setHeartbeat(Instant.now());
-            adventure.getFirstUser().setLongitude(heartbeatDto.longitude).setLatitude(heartbeatDto.latitude);
+            adventure.getFirstUser().setLongitude(heartbeatDto.longitude).setLatitude(heartbeatDto.latitude).setHeartbeat(Instant.now());
             return new HeartbeatDto(adventure.getId(), adventure.getSecondUser().getLatitude(), adventure.getSecondUser()
                 .getLongitude(), GameStatus.PLAYING, adventure.getToken());
         } else if (adventure.getSecondUser().getId().equals(currentUserId)) {
-            adventure.getSecondUser().setHeartbeat(Instant.now());
-            adventure.getSecondUser().setLongitude(heartbeatDto.longitude).setLatitude(heartbeatDto.latitude);
+            adventure.getSecondUser().setLongitude(heartbeatDto.longitude).setLatitude(heartbeatDto.latitude).setHeartbeat(Instant.now());
             return new HeartbeatDto(adventure.getId(), adventure.getFirstUser().getLatitude(), adventure.getFirstUser()
                 .getLongitude(), GameStatus.PLAYING, adventure.getToken());
         } else {
