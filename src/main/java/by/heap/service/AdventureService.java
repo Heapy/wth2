@@ -77,7 +77,7 @@ public class AdventureService {
     }
 
     private static boolean isUserExpired(User user) {
-        return user.getHeartbeat().getEpochSecond() + 10 < Instant.now().getEpochSecond();
+        return user.getHeartbeat().getEpochSecond() + 15 < Instant.now().getEpochSecond();
     }
 
     @RequestMapping(value = "/{id}/heartbeat", method = RequestMethod.PUT)
