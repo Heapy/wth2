@@ -8,5 +8,6 @@ public enum GameStatus {
     PLAYING,
     AFTER_GAME,
     ERROR,
-    EXPIRED
+    EXPIRED,
+    MADE_SUGGESTION
 }

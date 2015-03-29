@@ -2,11 +2,13 @@ package by.heap.service;
 
 import by.heap.entity.Adventure;
 import by.heap.entity.GameStatus;
+import by.heap.entity.Interest;
 import by.heap.entity.User;
 import by.heap.repository.AdventureRepository;
 import by.heap.repository.user.UserRepository;
 import by.heap.security.HeapApplicationContext;
 import by.heap.service.dto.HeartbeatDto;
+import by.heap.service.dto.InterestDto;
 import com.google.common.collect.Sets;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -97,12 +99,63 @@ public class AdventureService {
         return new TokenValidation(false);
     }
 
+    @RequestMapping(value = "/{id}/interest", method = RequestMethod.POST)
+    public InterestValidation checkInterest(@PathVariable Long id, @RequestBody InterestDto interestDto) {
+        Long currentUserId = applicationContext.getCurrentUserId();
+        Interest suggestedInterest = new Interest(interestDto.getInterest());
+        for (Iterator<Adventure> iterator = ADVENTURES.iterator(); iterator.hasNext(); ) {
+            Adventure adventure = iterator.next();
+            if (id.equals(adventure.getId())) {
+                if (adventure.getFirstUser().getId().equals(currentUserId)) {
+                    return validateInterest(adventure.getSecondUser(), suggestedInterest, adventure, iterator);
+                } else {
+                    return validateInterest(adventure.getFirstUser(), suggestedInterest, adventure, iterator);
+                }
+            }
+        }
+        return new InterestValidation(false);
+    }
+
+    private InterestValidation validateInterest(User anotherPlayer, Interest suggestedInterest, Adventure adventure, Iterator<Adventure> adventureIterator) {
+        if (anotherPlayer.getInterests().contains(suggestedInterest)) {
+            User user = applicationContext.getCurrentUser();
+            user.setKarma(user.getKarma() + 5);
+            userRepository.save(user);
+            finalizeOrRemoveAdventure(adventure, adventureIterator);
+            return new InterestValidation(true);
+        } else {
+            finalizeOrRemoveAdventure(adventure, adventureIterator);
+            return new InterestValidation(false);
+        }
+    }
+
+    private void finalizeOrRemoveAdventure(Adventure adventure, Iterator<Adventure> adventureIterator) {
+        if (adventure.getGameStatus().equals(GameStatus.MADE_SUGGESTION)) {
+            adventureIterator.remove();
+        } else {
+            adventure.setGameStatus(GameStatus.MADE_SUGGESTION);
+        }
+    }
+
     public static class TokenValidation {
 
         public TokenValidation() {
         }
 
         public TokenValidation(boolean status) {
+            this.status = status;
+        }
+
+        public boolean status;
+
+    }
+
+    public static class InterestValidation {
+
+        public InterestValidation() {
+        }
+
+        public InterestValidation(boolean status) {
             this.status = status;
         }
 
