@@ -74,4 +74,15 @@ public class Adventure extends AbstractEntity {
         this.gameStatus = gameStatus;
         return this;
     }
+
+    @Override
+    public String toString() {
+        return "Adventure{" +
+                "firstUser=" + firstUser +
+                ", secondUser=" + secondUser +
+                ", token='" + token + '\'' +
+                ", status=" + status +
+                ", gameStatus=" + gameStatus +
+                '}';
+    }
 }

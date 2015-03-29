@@ -145,4 +145,20 @@ public class User extends AbstractEntity {
         this.avatar = avatar;
         return this;
     }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "displayName='" + displayName + '\'' +
+                ", username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                ", secret='" + secret + '\'' +
+                ", interests=" + interests +
+                ", karma=" + karma +
+                ", longitude='" + longitude + '\'' +
+                ", latitude='" + latitude + '\'' +
+                ", heartbeat=" + heartbeat +
+                ", avatar='" + avatar + '\'' +
+                '}';
+    }
 }
