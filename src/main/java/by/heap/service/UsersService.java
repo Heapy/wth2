@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Random;
 
 @RestController
 @RequestMapping(value = "/users", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -34,17 +35,17 @@ public class UsersService {
         return userRepository.findAll();
     }
 
-    @Scheduled(fixedRate = 3000)
-    public void movePlayers(){
-        double k = -1;
-        for(User user : userRepository.findAll()){
-            if(user.getUsername().equals("test1") || user.getUsername().equals("test2")) {
-                continue;
-            }
-             k *= -1;
-            user.setLongitude(String.valueOf(Double.valueOf(user.getLongitude()) +  k * 0.0003));
-            user.setLatitude(String.valueOf(Double.valueOf(user.getLatitude()) + k * 0.0003));
-            userRepository.save(user);
+    @Scheduled(fixedRate = 1000)
+    public void movePlayers() {
+        Random random = new Random();
+        int firstRandomNumber = random.nextInt((int) userRepository.count() - 1);
+
+        User user = userRepository.findAll().get(firstRandomNumber);
+        if (user.getUsername().equals("test1") || user.getUsername().equals("test2")) {
+            return;
         }
+        user.setLongitude(String.valueOf(Double.valueOf(user.getLongitude()) + ((random.nextBoolean() ? 1 : -1) * 0.0005)));
+        user.setLatitude(String.valueOf(Double.valueOf(user.getLatitude()) + ((random.nextBoolean() ? 1 : -1) * 0.0005)));
+        userRepository.save(user);
     }
 }
