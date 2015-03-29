@@ -7,6 +7,13 @@ import javax.persistence.Entity;
 @Entity
 public class Interest extends AbstractEntity {
 
+    public Interest() {
+    }
+
+    public Interest(String name) {
+        this.name = name;
+    }
+
     @Column(unique = true, nullable = false)
     private String name;
 

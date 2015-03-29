@@ -1,5 +1,6 @@
 package by.heap;
 
+import by.heap.entity.Interest;
 import by.heap.entity.User;
 import by.heap.repository.user.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +10,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
+import java.util.HashSet;
 
 /**
  * Adds default data to application.
@@ -37,8 +39,8 @@ public class HeapDataLoader implements ApplicationListener<ContextRefreshedEvent
         userRepository.save(new User().setKarma(33L).setDisplayName("Sasha Demeshko").setUsername("demeshko.alexander@gmail.com").setSecret("secret").setPassword(passwordEncoder.encode("qwerty")).setAvatar("http://heap.by/assers/avatars/5.jpg"));
         userRepository.save(new User().setKarma(100L).setDisplayName("Igor Rain").setUsername("ce.fire@tut.by").setSecret("secret").setPassword(passwordEncoder.encode("qwerty")).setAvatar("http://heap.by/assers/avatars/6.jpg"));
         userRepository.save(new User().setKarma(1L).setDisplayName("Oleg Sauko").setUsername("oleg.sauko@gmail.com").setSecret("secret").setPassword(passwordEncoder.encode("qwerty")).setAvatar("http://heap.by/assers/avatars/7.jpg"));
-        userRepository.save(new User().setKarma(1L).setDisplayName("Tester 1").setUsername("test1").setSecret("secret").setPassword(passwordEncoder.encode("q")).setAvatar("http://heap.by/assers/avatars/7.jpg"));
-        userRepository.save(new User().setKarma(1L).setDisplayName("Tester 2").setUsername("test2").setSecret("secret").setPassword(passwordEncoder.encode("q")).setAvatar("http://heap.by/assers/avatars/7.jpg"));
+        userRepository.save(new User().setKarma(1L).setDisplayName("Tester 1").setInterests(new HashSet<>(Arrays.asList(new Interest("Java"), new Interest("Boobs")))).setUsername("test1").setSecret("secret").setPassword(passwordEncoder.encode("q")).setAvatar("http://heap.by/assers/avatars/7.jpg"));
+        userRepository.save(new User().setKarma(1L).setDisplayName("Tester 2").setInterests(new HashSet<>(Arrays.asList(new Interest("Java"), new Interest("Cars")))).setUsername("test2").setSecret("secret").setPassword(passwordEncoder.encode("q")).setAvatar("http://heap.by/assers/avatars/7.jpg"));
     }
 
 }
