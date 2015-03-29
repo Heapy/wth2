@@ -96,7 +96,7 @@ public class AdventureService {
                 break;
             }
         }
-        return new HeartbeatDto(null, null, GameStatus.SEARCHING, null);
+        return new HeartbeatDto(id, null, null, GameStatus.SEARCHING, null);
     }
 
 
@@ -108,25 +108,25 @@ public class AdventureService {
                     case PLAYING:
                         return playing(heartbeatDto, adventure, currentUserId);
                     case AFTER_GAME:
-                        return new HeartbeatDto(null, null, GameStatus.AFTER_GAME, adventure.getToken());
+                        return new HeartbeatDto(id, null, null, GameStatus.AFTER_GAME, adventure.getToken());
                 }
             }
         }
-        return new HeartbeatDto(null, null, GameStatus.ERROR, null);
+        return new HeartbeatDto(id, null, null, GameStatus.ERROR, null);
     }
 
     private HeartbeatDto playing(HeartbeatDto heartbeatDto, Adventure adventure, Long currentUserId) {
         if (adventure.getFirstUser().getId().equals(currentUserId)) {
             adventure.getFirstUser().setLongitude(heartbeatDto.longitude).setLatitude(heartbeatDto.latitude);
-            return new HeartbeatDto(adventure.getSecondUser().getLatitude(), adventure.getSecondUser()
+            return new HeartbeatDto(adventure.getId(), adventure.getSecondUser().getLatitude(), adventure.getSecondUser()
                 .getLongitude(), GameStatus.PLAYING, adventure.getToken());
         } else if (adventure.getSecondUser().getId().equals(currentUserId)) {
             adventure.getSecondUser().setLongitude(heartbeatDto.longitude).setLatitude(heartbeatDto.latitude);
-            return new HeartbeatDto(adventure.getFirstUser().getLatitude(), adventure.getFirstUser()
+            return new HeartbeatDto(adventure.getId(), adventure.getFirstUser().getLatitude(), adventure.getFirstUser()
                 .getLongitude(), GameStatus.PLAYING, adventure.getToken());
         } else {
             LOGGER.error("Приплыли");
-            return new HeartbeatDto(null, null, GameStatus.ERROR, null);
+            return new HeartbeatDto(adventure.getId(), null, null, GameStatus.ERROR, null);
         }
     }
 
@@ -150,6 +150,7 @@ public class AdventureService {
             foundAdventure = createNewAdventureAndWait(currentUser);
         }
         return new HeartbeatDto(
+            foundAdventure.getId(),
             foundAdventure.getFirstUser().getLatitude(),
             foundAdventure.getFirstUser().getLongitude(),
             foundAdventure.getGameStatus(),
