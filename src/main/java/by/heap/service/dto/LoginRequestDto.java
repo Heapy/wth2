@@ -17,4 +17,12 @@ public class LoginRequestDto {
 
     public LoginRequestDto() {
     }
+
+    @Override
+    public String toString() {
+        return "LoginRequestDto{" +
+                "username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                '}';
+    }
 }

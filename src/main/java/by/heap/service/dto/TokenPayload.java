@@ -9,4 +9,12 @@ public class TokenPayload {
 
     @JsonProperty
     public long expirationTime;
+
+    @Override
+    public String toString() {
+        return "TokenPayload{" +
+                "userId=" + userId +
+                ", expirationTime=" + expirationTime +
+                '}';
+    }
 }

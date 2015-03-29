@@ -30,4 +30,16 @@ public class HeartbeatDto {
         this.status = status;
         this.token = token;
     }
+
+
+    @Override
+    public String toString() {
+        return "HeartbeatDto{" +
+                "id=" + id +
+                ", latitude='" + latitude + '\'' +
+                ", longitude='" + longitude + '\'' +
+                ", status=" + status +
+                ", token='" + token + '\'' +
+                '}';
+    }
 }
