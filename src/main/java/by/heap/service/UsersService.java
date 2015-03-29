@@ -36,14 +36,14 @@ public class UsersService {
 
     @Scheduled(fixedRate = 3000)
     public void movePlayers(){
-        double k = 1;
+        double k = -1;
         for(User user : userRepository.findAll()){
             if(user.getUsername().equals("test1") || user.getUsername().equals("test2")) {
                 continue;
             }
              k *= -1;
-            user.setLongitude(String.valueOf(Double.valueOf(user.getLongitude()) +  k * 0.003));
-            user.setLatitude(String.valueOf(Double.valueOf(user.getLatitude()) + k * 0.003));
+            user.setLongitude(String.valueOf(Double.valueOf(user.getLongitude()) +  k * 0.0003));
+            user.setLatitude(String.valueOf(Double.valueOf(user.getLatitude()) + k * 0.0003));
             userRepository.save(user);
         }
     }
