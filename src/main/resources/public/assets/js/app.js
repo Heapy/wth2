@@ -80,6 +80,7 @@ var authHome = (function () {
         } else {
             $(".profile-edit").hide();
         }
+        scrollTo('profile', 100);
     }
 
     $this.logout = function () {
@@ -118,7 +119,8 @@ var mapHome = (function () {
 
     var $this = {};
     $this.map = {};
-    $this.points = [];
+    $this.points = {};
+    $this.template = '';
 
     $this.init = function () {
         ymaps.ready(function () {
@@ -129,27 +131,43 @@ var mapHome = (function () {
             });
             $this.map.behaviors.disable(['drag', 'rightMouseButtonMagnifier', 'scrollZoom']);
 
-            var userBalloonLayout = ymaps.templateLayoutFactory.createClass(
+            $this.template = ymaps.templateLayoutFactory.createClass(
                 '<img style="border-radius:50px; width: 80px; height: 80px;" src="{{properties.avatar}}">' +
                 '<div style="width:90px;height: 90px;border-radius: 50px; background: white; z-index: -5; position: relative; top: -85px; left: -5px"></div>' +
                 '<span style="background-color: white;font-size: 16px;box-shadow: -1px -1px 15px 0px rgba(50, 50, 50, 0.75); display:inline-block; text-align:center; padding: 5px 7px; width:90px; position: relative; top: -75px; left: -10px">{{properties.displayName}}</span>'
             );
 
+
+            $this.points = new ymaps.GeoObjectCollection({}, {
+                preset: 'default#image',
+                draggable: false
+            });
+
+            $this.map.geoObjects.add($this.points);
+
+            setInterval($this.update, 3000);
+
+
+        });
+
+        $this.update = function(){
             getData(baseUrl + '/users/location', 'get', {}, function (data) {
+                $this.points.removeAll();
                 var users = data;
                 for (var i = 0; i < users.length; i++) {
-                    $this.map.geoObjects.add(new ymaps.Placemark([users[i].latitude, users[i].longitude], {
+                    $this.points.add(new ymaps.Placemark([users[i].latitude, users[i].longitude], {
                         avatar: users[i].avatar,
                         displayName: users[i].displayName
                     }, {
-                        hintLayout: userBalloonLayout,
+                        hintLayout: $this.template,
                         iconLayout: 'default#image',
                         iconImageHref: "assets/img/ico.png",
                         iconImageSize: [40, 40]
                     }));
                 }
+                $this.map.geo
             })
-        });
+        }
 
     };
 

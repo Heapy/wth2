@@ -26,17 +26,34 @@
     <nav class="menu sticky-nav">
         <ul>
             <li onclick="scrollTo('about',100)"><a class="menu-link" href="#about">About</a></li>
-            <li onclick="scrollTo('profile', 100)"><a class="menu-link" href="#profile">Profile</a></li>
+            <li onclick="scrollTo('map', 100)"><a class="menu-link" href="#map">Map</a></li>
             <li onclick="scrollTo('top', 100)"><a class="menu-link" href="#top">Top Players</a></li>
-            <li onclick="scrollTo('map',1)"><a class="menu-link" href="#map">Map</a></li>
+            <li onclick="scrollTo('profile', 100)"><a class="menu-link" href="#profile">Profile</a></li>
             <li id="logout-button" onclick="authHome.logout();" style="display: none"><a class="menu-link" href="#logout" >Logout</a></li>
         </ul>
     </nav>
 </header>
 <div class="page">
 
-    <!--<section class="user-info land" id="about">-->
-    <!--</section>-->
+    <section class="about land" id="about">
+        <h1>HEAP</h1>
+        <h3>Connect people in real life</h3>
+        <p>Just imagine: you and big pice of pizza ... mmm. Yes, its Sweet.
+            Take look at you body, ye, its great. Say yo to your friends and just play on piano old thing.
+            Yee, its great!</p>
+    </section>
+    <section class="land map">
+        <div id="map"></div>
+    </section>
+    <section class="land top-players" id="top">
+        <div class="top-players-message">
+            <h3>Top Players</h3>
+            <h4>Most active players right now</h4>
+        </div>
+        <div id="players" class="players clearfix">
+
+        </div>
+    </section>
     <section class="user-info land" id="profile">
         <div id="profile-view" class="profile-view" style="display: none">
             <div class="profile-view-main">
@@ -184,19 +201,6 @@
         </div>
     </section>
 
-    <section class="land top-players" id="top">
-        <div class="top-players-message">
-            <h3>Top Players</h3>
-            <h4>Most active players right now</h4>
-        </div>
-        <div id="players" class="players clearfix">
-
-        </div>
-    </section>
-
-    <section class="land map">
-        <div id="map"></div>
-    </section>
 
 </div>
 

@@ -16,13 +16,12 @@ html, body {
     clear: both;
 }
 
-
 .page {
     font-family: 'Play', sans-serif;
-    padding-top: 100px;
+    /*padding-top: 100px;*/
 }
 
-.land{
+.land {
     width: 75%;
     margin: 0 auto;
 }
@@ -142,7 +141,6 @@ header a {
     font-size: 2em;
 }
 
-
 .profile-view {
     background-color: white;
     box-shadow: #000000 0 0 89px 27px;
@@ -154,13 +152,12 @@ header a {
     text-align: center;
 }
 
-.profile-karma{
+.profile-karma {
     text-align: center;
     margin-top: 5px;
     font-size: 16px;
     color: rgb(107, 107, 107);
 }
-
 
 .profile-avatar img {
     margin: 30px;
@@ -179,7 +176,7 @@ header a {
     text-align: center;
 }
 
-.profile-view-interests{
+.profile-view-interests {
     float: right;
     margin: 34px 350px 50px 50px;
 }
@@ -206,7 +203,31 @@ header a {
 
 .profile-edit button {
     margin-top: 10px;
+
 }
+
+.about {
+    color: white;
+
+    margin-top: 60px;
+    padding-top: 40px;
+    margin-bottom: 80px;
+}
+
+.about h1 {
+    font-weight: bold;
+    font-size: 5em;
+}
+.about h3 {
+    font-weight: bold;
+    font-size: 3em;
+}
+
+.about p {
+   width: 80%;
+    font-size: 2em;
+}
+
 
 footer {
     background: white;
