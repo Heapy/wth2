@@ -32,7 +32,7 @@ public class HeapDataLoader implements ApplicationListener<ContextRefreshedEvent
     }
 
     private void creteUsers() {
-        userRepository.save(new User().setKarma(42L).setDisplayName("Ruslan Ibragimov").setUsername("theliveperson@gmail.com").setSecret("secret").setPassword(passwordEncoder.encode("qwerty")).setAvatar("http://heap.by/assets/avatars/1.jpg"));
+        userRepository.save(new User().setLongitude("27.5419").setLatitude("53.9185").setKarma(42L).setDisplayName("Ruslan Ibragimov").setUsername("theliveperson@gmail.com").setSecret("secret").setPassword(passwordEncoder.encode("qwerty")).setAvatar("http://heap.by/assets/avatars/1.jpg"));
         userRepository.save(new User().setLongitude("27.5919").setLatitude("53.9185").setKarma(99L).setDisplayName("Hleb Albau").setUsername("hleb.albau@gmail.com").setSecret("secret").setPassword(passwordEncoder
                 .encode("qwerty")).setAvatar("http://heap.by/assets/avatars/2.jpg"));
         userRepository.save(new User().setLongitude("27.5741").setLatitude("53.8972").setKarma(44L).setDisplayName("Max Gergalov").setUsername("maxgergalov@gmail.com").setSecret("secret").setPassword(passwordEncoder.encode("qwerty")).setAvatar("http://heap.by/assets/avatars/3.jpg"));

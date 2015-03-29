@@ -8,6 +8,7 @@ import by.heap.repository.user.UserRepository;
 import com.fasterxml.jackson.annotation.JsonView;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -31,5 +32,19 @@ public class UsersService {
     @JsonView(UserJsonView.Location.class)
     public List<User> usersLocation() {
         return userRepository.findAll();
+    }
+
+    @Scheduled(fixedRate = 3000)
+    public void movePlayers(){
+        double k = 1;
+        for(User user : userRepository.findAll()){
+            if(user.getUsername().equals("test1") || user.getUsername().equals("test2")) {
+                continue;
+            }
+             k *= -1;
+            user.setLongitude(String.valueOf(Double.valueOf(user.getLongitude()) +  k * 0.003));
+            user.setLatitude(String.valueOf(Double.valueOf(user.getLatitude()) + k * 0.003));
+            userRepository.save(user);
+        }
     }
 }
