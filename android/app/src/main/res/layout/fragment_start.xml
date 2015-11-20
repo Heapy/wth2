@@ -1,0 +1,31 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent" tools:context="by.heap.heap.StartFragment"
+    android:padding="0dp"
+    android:layout_margin="0dp"
+    >
+
+    <ru.yandex.yandexmapkit.MapView
+        android:id="@+id/start_map"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:apiKey="xTvofJ2LFDW4Yh3MKykPSAkF0VMClsLhaBVz2BBFrPf1~uMP5lwq9u-g3vJQYFrdYXJmPa0P-1YW44rWJzb9DmwzhTyQGnILfbi3BCI4YjY="
+        />
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:layout_alignParentBottom="true">
+
+        <Button
+            android:text="Пуск!"
+            android:id="@+id/start_button"
+            android:padding="10dp"
+            android:layout_margin="4dp"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            style="@style/DefaultButtonText" />
+    </LinearLayout>
+</RelativeLayout>

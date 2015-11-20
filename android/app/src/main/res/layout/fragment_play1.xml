@@ -1,0 +1,57 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+android:layout_height="match_parent" tools:context="by.heap.heap.Play1Fragment"
+android:padding="0dp"
+android:layout_margin="0dp"
+android:background="@drawable/balloon_bg">
+
+<ru.yandex.yandexmapkit.MapView
+    android:id="@+id/play_map"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:apiKey="xTvofJ2LFDW4Yh3MKykPSAkF0VMClsLhaBVz2BBFrPf1~uMP5lwq9u-g3vJQYFrdYXJmPa0P-1YW44rWJzb9DmwzhTyQGnILfbi3BCI4YjY="
+    />
+
+<TextView
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:textAppearance="?android:attr/textAppearanceLarge"
+    android:text="Найдите пользователя\nи введите код"
+    android:id="@+id/textView6"
+    android:background="#99ffffff"
+    android:padding="15dp"
+    android:textAlignment="center"
+    android:layout_marginTop="10dp"
+    android:layout_marginRight="29dp"
+    android:layout_marginLeft="29dp" />
+
+<EditText
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:id="@+id/tokenInput"
+    android:layout_alignParentBottom="true"
+    android:layout_alignLeft="@+id/textView6"
+    android:layout_alignStart="@+id/textView6"
+    android:layout_marginBottom="48dp"
+    android:numeric="integer"
+    android:layout_toLeftOf="@+id/tokenSubmitButton"
+    android:layout_toStartOf="@+id/tokenSubmitButton"
+    android:background="@drawable/edittext_top_bg"
+    android:padding="10dp"
+    android:hint="Код"
+    android:textColorHint="#cccccc"/>
+
+<Button
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="OK"
+    android:id="@+id/tokenSubmitButton"
+    android:layout_alignTop="@+id/tokenInput"
+    android:layout_alignRight="@+id/textView6"
+    android:layout_alignEnd="@+id/textView6"
+    android:layout_alignBottom="@+id/tokenInput"
+    style="@style/DefaultButtonText"
+    android:background="@drawable/button_default_bg"/>
+
+
+</RelativeLayout>
